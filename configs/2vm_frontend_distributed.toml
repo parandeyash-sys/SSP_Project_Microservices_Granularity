@@ -1,0 +1,30 @@
+# =============================================================================
+# CONFIG 2VM-B: [frontend] & [distributed backend]
+# VM1: frontend only
+# VM2: each backend service in its own separate process (distributed)
+# =============================================================================
+[serviceweaver]
+name   = "boutique-2vm-frontend-distributed"
+binary = "../onlineboutique/boutique"
+
+[ssh]
+listeners.boutique = {address = "0.0.0.0:8080"}
+locations          = "ssh_locations_2vm.txt"
+
+# Only frontend is co-located (alone); backend components each get their own process.
+colocate = [
+  [
+    "github.com/ServiceWeaver/onlineboutique/frontend/T",
+  ],
+  # Each backend service in its own group → its own process on VM2
+  ["github.com/ServiceWeaver/onlineboutique/adservice/T"],
+  ["github.com/ServiceWeaver/onlineboutique/cartservice/T",
+   "github.com/ServiceWeaver/onlineboutique/cartservice/cartCache"],
+  ["github.com/ServiceWeaver/onlineboutique/checkoutservice/T"],
+  ["github.com/ServiceWeaver/onlineboutique/currencyservice/T"],
+  ["github.com/ServiceWeaver/onlineboutique/emailservice/T"],
+  ["github.com/ServiceWeaver/onlineboutique/paymentservice/T"],
+  ["github.com/ServiceWeaver/onlineboutique/productcatalogservice/T"],
+  ["github.com/ServiceWeaver/onlineboutique/recommendationservice/T"],
+  ["github.com/ServiceWeaver/onlineboutique/shippingservice/T"],
+]

@@ -1,0 +1,16 @@
+# =============================================================================
+# CONFIG 2VM-D: Fully distributed across two VMs
+# All components separate processes, balanced across VM1 and VM2.
+# No colocate → Service Weaver distributes components round-robin across
+# both machines listed in ssh_locations_2vm.txt
+# =============================================================================
+[serviceweaver]
+name   = "boutique-2vm-distributed-distributed"
+binary = "../onlineboutique/boutique"
+
+[ssh]
+listeners.boutique = {address = "0.0.0.0:8080"}
+locations          = "ssh_locations_2vm.txt"
+
+# No colocate key → every component gets its own process,
+# distributed across all machines in ssh_locations_2vm.txt

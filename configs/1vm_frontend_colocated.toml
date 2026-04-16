@@ -1,0 +1,32 @@
+# =============================================================================
+# CONFIG 1VM-B: Frontend co-located with light services + backend group
+# Group 1: frontend + adservice + currencyservice + recommendationservice
+# Group 2: cartservice + cartCache + checkoutservice + email + payment +
+#           productcatalog + shippingservice
+# =============================================================================
+[serviceweaver]
+name   = "boutique-1vm-frontend-colocated"
+binary = "../onlineboutique/boutique"
+
+[multi]
+listeners.boutique = {address = "localhost:8080"}
+
+colocate = [
+  # Group 1 — Frontend + lightweight read-path services
+  [
+    "github.com/ServiceWeaver/onlineboutique/frontend/T",
+    "github.com/ServiceWeaver/onlineboutique/adservice/T",
+    "github.com/ServiceWeaver/onlineboutique/currencyservice/T",
+    "github.com/ServiceWeaver/onlineboutique/recommendationservice/T",
+  ],
+  # Group 2 — Transactional / heavier backend services
+  [
+    "github.com/ServiceWeaver/onlineboutique/cartservice/T",
+    "github.com/ServiceWeaver/onlineboutique/cartservice/cartCache",
+    "github.com/ServiceWeaver/onlineboutique/checkoutservice/T",
+    "github.com/ServiceWeaver/onlineboutique/emailservice/T",
+    "github.com/ServiceWeaver/onlineboutique/paymentservice/T",
+    "github.com/ServiceWeaver/onlineboutique/productcatalogservice/T",
+    "github.com/ServiceWeaver/onlineboutique/shippingservice/T",
+  ],
+]

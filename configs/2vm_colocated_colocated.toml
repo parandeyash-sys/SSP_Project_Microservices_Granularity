@@ -1,0 +1,32 @@
+# =============================================================================
+# CONFIG 2VM-C: [co-located group 1] & [co-located group 2]
+# VM1: frontend + catalog/browsing services (co-located)
+# VM2: cart/checkout/order services (co-located)
+# =============================================================================
+[serviceweaver]
+name   = "boutique-2vm-colocated-colocated"
+binary = "../onlineboutique/boutique"
+
+[ssh]
+listeners.boutique = {address = "0.0.0.0:8080"}
+locations          = "ssh_locations_2vm.txt"
+
+colocate = [
+  # Group 1 → VM1: frontend + read-path services
+  [
+    "github.com/ServiceWeaver/onlineboutique/frontend/T",
+    "github.com/ServiceWeaver/onlineboutique/adservice/T",
+    "github.com/ServiceWeaver/onlineboutique/currencyservice/T",
+    "github.com/ServiceWeaver/onlineboutique/productcatalogservice/T",
+    "github.com/ServiceWeaver/onlineboutique/recommendationservice/T",
+    "github.com/ServiceWeaver/onlineboutique/shippingservice/T",
+  ],
+  # Group 2 → VM2: transactional / write-path services
+  [
+    "github.com/ServiceWeaver/onlineboutique/cartservice/T",
+    "github.com/ServiceWeaver/onlineboutique/cartservice/cartCache",
+    "github.com/ServiceWeaver/onlineboutique/checkoutservice/T",
+    "github.com/ServiceWeaver/onlineboutique/emailservice/T",
+    "github.com/ServiceWeaver/onlineboutique/paymentservice/T",
+  ],
+]

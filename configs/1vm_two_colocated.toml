@@ -1,0 +1,35 @@
+# =============================================================================
+# CONFIG 1VM-C: Two co-located backend groups (frontend separate)
+# Group 1: frontend (alone, its own process)
+# Group 2: catalog + recommendation + ad + currency + shipping
+# Group 3: cart + cartCache + checkout + email + payment
+# =============================================================================
+[serviceweaver]
+name   = "boutique-1vm-two-colocated"
+binary = "../onlineboutique/boutique"
+
+[multi]
+listeners.boutique = {address = "localhost:8080"}
+
+colocate = [
+  # Group 1 — Frontend alone (its own process)
+  [
+    "github.com/ServiceWeaver/onlineboutique/frontend/T",
+  ],
+  # Group 2 — Catalog / browsing services
+  [
+    "github.com/ServiceWeaver/onlineboutique/productcatalogservice/T",
+    "github.com/ServiceWeaver/onlineboutique/recommendationservice/T",
+    "github.com/ServiceWeaver/onlineboutique/adservice/T",
+    "github.com/ServiceWeaver/onlineboutique/currencyservice/T",
+    "github.com/ServiceWeaver/onlineboutique/shippingservice/T",
+  ],
+  # Group 3 — Order / checkout services
+  [
+    "github.com/ServiceWeaver/onlineboutique/cartservice/T",
+    "github.com/ServiceWeaver/onlineboutique/cartservice/cartCache",
+    "github.com/ServiceWeaver/onlineboutique/checkoutservice/T",
+    "github.com/ServiceWeaver/onlineboutique/emailservice/T",
+    "github.com/ServiceWeaver/onlineboutique/paymentservice/T",
+  ],
+]

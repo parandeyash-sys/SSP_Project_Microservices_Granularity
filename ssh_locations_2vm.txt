@@ -1,0 +1,16 @@
+# SSH Locations File — 2-VM Experiments
+# =========================================================
+# List ONE IP address per line.
+# Line 1 = VM1 (this machine)
+# Line 2 = VM2 (second machine)
+#
+# Service Weaver's SSH deployer reads this file when running:
+#   weaver ssh deploy configs/2vm_*.toml
+#
+# HOW TO FILL IN:
+#   1. Find your local IP:   hostname -I | awk '{print $1}'
+#   2. Get VM2 IP from your VM provider / ifconfig on VM2
+#   3. Replace the placeholders below and save.
+# =========================================================
+127.0.0.1
+<VM2_IP_ADDRESS>

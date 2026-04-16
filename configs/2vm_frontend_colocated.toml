@@ -1,0 +1,36 @@
+# =============================================================================
+# CONFIG 2VM-A: [frontend] & [co-located backend]
+# VM1: frontend only
+# VM2: all backend services co-located in one process
+#
+# HOW TO USE:
+#   1. Set VM1_HOST and VM2_HOST in your environment (or edit ssh_locations_*.txt)
+#   2. Run:  weaver ssh deploy configs/2vm_frontend_colocated.toml
+# =============================================================================
+[serviceweaver]
+name   = "boutique-2vm-frontend-colocated"
+binary = "../onlineboutique/boutique"
+
+[ssh]
+listeners.boutique = {address = "0.0.0.0:8080"}
+locations          = "ssh_locations_2vm.txt"   # file with VM1_IP and VM2_IP, one per line
+
+# Group 1 (→ VM1): frontend process
+# Group 2 (→ VM2): all backend co-located
+colocate = [
+  [
+    "github.com/ServiceWeaver/onlineboutique/frontend/T",
+  ],
+  [
+    "github.com/ServiceWeaver/onlineboutique/adservice/T",
+    "github.com/ServiceWeaver/onlineboutique/cartservice/T",
+    "github.com/ServiceWeaver/onlineboutique/cartservice/cartCache",
+    "github.com/ServiceWeaver/onlineboutique/checkoutservice/T",
+    "github.com/ServiceWeaver/onlineboutique/currencyservice/T",
+    "github.com/ServiceWeaver/onlineboutique/emailservice/T",
+    "github.com/ServiceWeaver/onlineboutique/paymentservice/T",
+    "github.com/ServiceWeaver/onlineboutique/productcatalogservice/T",
+    "github.com/ServiceWeaver/onlineboutique/recommendationservice/T",
+    "github.com/ServiceWeaver/onlineboutique/shippingservice/T",
+  ],
+]

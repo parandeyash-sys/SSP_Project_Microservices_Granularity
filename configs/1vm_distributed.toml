@@ -1,0 +1,13 @@
+# =============================================================================
+# CONFIG 1VM-D: Fully Distributed
+# No colocate groups — every component runs in its own OS process.
+# This is the "microservices" extreme on a single VM.
+# =============================================================================
+[serviceweaver]
+name   = "boutique-1vm-distributed"
+binary = "../onlineboutique/boutique"
+
+[multi]
+listeners.boutique = {address = "localhost:8080"}
+
+# No colocate key → each component gets its own process automatically.

@@ -1,0 +1,27 @@
+# =============================================================================
+# CONFIG 1VM-A: Monolith
+# All 11 components co-located in a single OS process.
+# =============================================================================
+[serviceweaver]
+name   = "boutique-1vm-monolith"
+binary = "../onlineboutique/boutique"
+
+[multi]
+listeners.boutique = {address = "localhost:8080"}
+
+# All components in one group → single process (true monolith)
+colocate = [
+  [
+    "github.com/ServiceWeaver/onlineboutique/frontend/T",
+    "github.com/ServiceWeaver/onlineboutique/adservice/T",
+    "github.com/ServiceWeaver/onlineboutique/cartservice/T",
+    "github.com/ServiceWeaver/onlineboutique/cartservice/cartCache",
+    "github.com/ServiceWeaver/onlineboutique/checkoutservice/T",
+    "github.com/ServiceWeaver/onlineboutique/currencyservice/T",
+    "github.com/ServiceWeaver/onlineboutique/emailservice/T",
+    "github.com/ServiceWeaver/onlineboutique/paymentservice/T",
+    "github.com/ServiceWeaver/onlineboutique/productcatalogservice/T",
+    "github.com/ServiceWeaver/onlineboutique/recommendationservice/T",
+    "github.com/ServiceWeaver/onlineboutique/shippingservice/T",
+  ],
+]
