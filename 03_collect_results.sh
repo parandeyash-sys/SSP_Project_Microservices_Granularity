@@ -84,7 +84,7 @@ for VM_COUNT in 1 2; do
 
         for VUS_DIR in "${CONFIG_DIR}"*/; do
             VUS=$(basename "$VUS_DIR")
-            STATS_CSV="${VUS_DIR}locust_stats.csv"
+            STATS_CSV="${VUS_DIR}locust/locust_stats.csv"
 
             ROW=$(parse_stats_csv "$STATS_CSV" "$VM_COUNT" "$CONFIG" "$VUS" 2>/dev/null || true)
             if [ -n "$ROW" ]; then

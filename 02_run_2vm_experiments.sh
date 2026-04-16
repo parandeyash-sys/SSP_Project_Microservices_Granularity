@@ -101,6 +101,7 @@ ssh -o BatchMode=yes -o ConnectTimeout=5 "$VM2_HOST" echo "SSH to VM2 OK" \
     || error "Cannot SSH to ${VM2_HOST}. Set up passwordless SSH first (see header comments)."
 
 mkdir -p "$RESULTS_DIR"
+source "monitoring/lib_monitor.sh"
 echo "[$(timestamp)] [2VM] ======== Starting 2-VM experiment suite ========" | tee -a "$LOG"
 
 # ── Main experiment loop ───────────────────────────────────────────────────────
@@ -115,22 +116,32 @@ for CONFIG in "${CONFIGS[@]}"; do
         SPAWN_RATE=$(( VUS / SPAWN_DIVISOR ))
         [ "$SPAWN_RATE" -lt 1 ] && SPAWN_RATE=1
 
-        OUT_DIR="${RESULTS_DIR}/${CONFIG}/${VUS}"
-        mkdir -p "$OUT_DIR"
-        CSV_PREFIX="${OUT_DIR}/locust"
+        setup_run_dirs "$RESULTS_DIR" "$CONFIG" "$VUS"
+        CSV_PREFIX="${LOCUST_DIR}/locust"
 
         info "▶  Config=${CONFIG} | VUs=${VUS} | Spawn=${SPAWN_RATE}/s | Duration=${RUN_TIME}"
         echo "[$(timestamp)] [2VM] Config=${CONFIG} VUs=${VUS} START" | tee -a "$LOG"
 
         # ── Start app via SSH deployer ─────────────────────────────────────────
         info "Starting SSH-deployed app with: ${TOML}"
-        weaver ssh deploy "$TOML" > "${OUT_DIR}/app.log" 2>&1 &
+        weaver ssh deploy "$TOML" > "${RUN_DIR}/app.log" 2>&1 &
         APP_PID=$!
         info "Deployer PID: ${APP_PID}"
 
         wait_for_ready "${HOST}" "$READINESS_TIMEOUT"
         info "Warming up ${WARMUP_SLEEP}s..."
         sleep "$WARMUP_SLEEP"
+
+        # ── Start System Monitoring ────────────────────────────────────────────
+        start_system_monitoring "$SYSMET_DIR"
+
+        # ── Run Profiling & Locust ─────────────────────────────────────────────
+        # Schedule pprof collection to run midway through the 300s test
+        (
+            sleep 120
+            collect_pprof "localhost:8080" "$PPROF_DIR" 60
+        ) &
+        PPROF_SCHED_PID=$!
 
         # ── Run Locust ─────────────────────────────────────────────────────────
         locust \
@@ -143,9 +154,21 @@ for CONFIG in "${CONFIGS[@]}"; do
             --csv "$CSV_PREFIX" \
             --csv-full-history \
             --only-summary \
-            2>&1 | tee "${OUT_DIR}/locust.log"
+            2>&1 | tee "${LOCUST_DIR}/locust.log"
 
         STATUS=$?
+        
+        wait $PPROF_SCHED_PID 2>/dev/null || true
+
+        # ── Stop System Monitoring ─────────────────────────────────────────────
+        stop_system_monitoring
+
+        # ── Collect Prometheus ─────────────────────────────────────────────────
+        collect_prometheus_snapshot "http://localhost:9090" "$PROM_DIR"
+
+        # ── Write Metadata ─────────────────────────────────────────────────────
+        write_run_metadata "$RUN_DIR" 2 "$CONFIG" "$VUS" 300
+
         if [ $STATUS -eq 0 ]; then
             info "✔  Complete: Config=${CONFIG} VUs=${VUS}"
             echo "[$(timestamp)] [2VM] Config=${CONFIG} VUs=${VUS} SUCCESS" | tee -a "$LOG"

@@ -83,6 +83,7 @@ command -v locust   > /dev/null   || error "'locust' not in PATH. Activate the v
 command -v curl     > /dev/null   || error "'curl' not installed."
 
 mkdir -p "$RESULTS_DIR"
+source "monitoring/lib_monitor.sh"
 echo "[$(timestamp)] [1VM] ======== Starting 1-VM experiment suite ========" | tee -a "$LOG"
 
 # ── Main experiment loop ───────────────────────────────────────────────────────
@@ -97,22 +98,33 @@ for CONFIG in "${CONFIGS[@]}"; do
         SPAWN_RATE=$(( VUS / SPAWN_DIVISOR ))
         [ "$SPAWN_RATE" -lt 1 ] && SPAWN_RATE=1
 
-        OUT_DIR="${RESULTS_DIR}/${CONFIG}/${VUS}"
-        mkdir -p "$OUT_DIR"
-        CSV_PREFIX="${OUT_DIR}/locust"
+        setup_run_dirs "$RESULTS_DIR" "$CONFIG" "$VUS"
+        CSV_PREFIX="${LOCUST_DIR}/locust"
 
         info "▶  Config=${CONFIG} | VUs=${VUS} | Spawn rate=${SPAWN_RATE}/s | Duration=${RUN_TIME}"
         echo "[$(timestamp)] [1VM] Config=${CONFIG} VUs=${VUS} START" | tee -a "$LOG"
 
         # ── Start app ──────────────────────────────────────────────────────────
         info "Starting app with config: ${TOML}"
-        weaver multi deploy "$TOML" > "${OUT_DIR}/app.log" 2>&1 &
+        weaver multi deploy "$TOML" > "${RUN_DIR}/app.log" 2>&1 &
         APP_PID=$!
         info "App PID: ${APP_PID}"
 
         wait_for_ready "${HOST}" "$READINESS_TIMEOUT"
         info "Warming up for ${WARMUP_SLEEP}s..."
         sleep "$WARMUP_SLEEP"
+
+        # ── Start System Monitoring ────────────────────────────────────────────
+        start_system_monitoring "$SYSMET_DIR"
+
+        # ── Run Profiling & Locust ─────────────────────────────────────────────
+        # Schedule pprof collection to run midway through the 300s test
+        # e.g., wait 120s, profile 60s
+        (
+            sleep 120
+            collect_pprof "localhost:8080" "$PPROF_DIR" 60
+        ) &
+        PPROF_SCHED_PID=$!
 
         # ── Run Locust ─────────────────────────────────────────────────────────
         info "Running Locust..."
@@ -126,9 +138,21 @@ for CONFIG in "${CONFIGS[@]}"; do
             --csv "$CSV_PREFIX" \
             --csv-full-history \
             --only-summary \
-            2>&1 | tee "${OUT_DIR}/locust.log"
+            2>&1 | tee "${LOCUST_DIR}/locust.log"
 
         STATUS=$?
+        
+        wait $PPROF_SCHED_PID 2>/dev/null || true
+
+        # ── Stop System Monitoring ─────────────────────────────────────────────
+        stop_system_monitoring
+
+        # ── Collect Prometheus ─────────────────────────────────────────────────
+        collect_prometheus_snapshot "http://localhost:9090" "$PROM_DIR"
+
+        # ── Write Metadata ─────────────────────────────────────────────────────
+        write_run_metadata "$RUN_DIR" 1 "$CONFIG" "$VUS" 300
+
         if [ $STATUS -eq 0 ]; then
             info "✔  Locust run complete for Config=${CONFIG} VUs=${VUS}"
             echo "[$(timestamp)] [1VM] Config=${CONFIG} VUs=${VUS} SUCCESS" | tee -a "$LOG"

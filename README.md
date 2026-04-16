@@ -22,6 +22,11 @@ SSP_Online/
 ├── 02_run_2vm_experiments.sh  # Run 4 × 2-VM configs (SSH)
 ├── 03_collect_results.sh      # Parse CSVs → results/summary.csv
 ├── 04_plot_results.py         # Generate bar charts
+├── 05_setup_prometheus.sh     # Download Prometheus & Node Exporter
+├── monitoring/
+│   ├── lib_monitor.sh         # Sysstat, pprof, & Prom handlers
+│   ├── start_prometheus.sh    # Starts Prom + Exporter
+│   └── stop_prometheus.sh     # Stops Prom + Exporter
 ├── locustfile.py              # Locust load test user flows
 ├── ssh_locations_2vm.txt      # VM IPs for SSH deployer
 ├── experiment.log             # Append-only run log
@@ -35,8 +40,11 @@ SSP_Online/
 │   ├── 2vm_colocated_colocated.toml
 │   └── 2vm_distributed_distributed.toml
 ├── results/
-│   ├── 1vm/<config>/<vus>/locust_stats.csv
-│   ├── 2vm/<config>/<vus>/locust_stats.csv
+│   ├── 1vm/<config>/<vus>/
+│   │   ├── system-metrics/    # sar, mpstat, vmstat, ss, iostat
+│   │   ├── pprof/             # CPU, heap, goroutine, block profiles
+│   │   ├── prometheus/        # instant & range JSON snapshots
+│   │   └── locust/            # locust_stats.csv
 │   └── summary.csv
 └── plots/
     ├── 1vm/  (avg_ms.png, p95_ms.png, p99_ms.png, max_ms.png, rps.png, overview.png)
@@ -119,6 +127,19 @@ locust -f locustfile.py --headless -u 10 -r 2 \
 
 ---
 
+### Step 3.5 — Setup Monitoring Infrastructure
+
+Before running full experiments, set up the monitoring stack:
+
+```bash
+./05_setup_prometheus.sh
+./monitoring/start_prometheus.sh
+```
+
+*(You can verify it works by visiting `http://localhost:9090`)*
+
+---
+
 ### Step 4 — Run 1-VM Experiments
 
 ```bash
@@ -129,7 +150,8 @@ source ~/ssp_venv/bin/activate
 **What it does:**
 - Loops through 4 configurations × 7 workload levels (500, 750, 1000, 1250, 1500, 1750, 2000 VUs)
 - Each level: **5 minutes** of load
-- Saves Locust CSVs to `results/1vm/<config>/<vus>/`
+- Concurrently triggers `system-metrics` capture (1s intervals), mid-test `pprof` profile collection, and `prometheus` snapshots at completion
+- Saves all telemetry securely isolated to `results/1vm/<config>/<vus>/`
 - Appends progress to `experiment.log`
 
 **Estimated time:** ~4 configs × 7 levels × 5 min = **~2.3 hours** (+ startup overhead)
