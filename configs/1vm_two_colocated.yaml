@@ -1,0 +1,23 @@
+appConfig: "weaver.toml"
+listeners:
+  - name: boutique
+    public: true
+    port: 8080
+groups:
+  - name: frontend-group
+    components:
+      - github.com/ServiceWeaver/onlineboutique/frontend/T
+  - name: backend-half1
+    components:
+      - github.com/ServiceWeaver/onlineboutique/adservice/T
+      - github.com/ServiceWeaver/onlineboutique/cartservice/T
+      - github.com/ServiceWeaver/onlineboutique/cartservice/cartCache
+      - github.com/ServiceWeaver/onlineboutique/checkoutservice/T
+      - github.com/ServiceWeaver/onlineboutique/currencyservice/T
+  - name: backend-half2
+    components:
+      - github.com/ServiceWeaver/onlineboutique/emailservice/T
+      - github.com/ServiceWeaver/onlineboutique/paymentservice/T
+      - github.com/ServiceWeaver/onlineboutique/productcatalogservice/T
+      - github.com/ServiceWeaver/onlineboutique/recommendationservice/T
+      - github.com/ServiceWeaver/onlineboutique/shippingservice/T

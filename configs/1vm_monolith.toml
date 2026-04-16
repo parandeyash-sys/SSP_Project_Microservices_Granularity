@@ -6,9 +6,6 @@
 name   = "boutique-1vm-monolith"
 binary = "../onlineboutique/boutique"
 
-[multi]
-listeners.boutique = {address = "localhost:8080"}
-
 # All components in one group → single process (true monolith)
 colocate = [
   [
@@ -25,3 +22,4 @@ colocate = [
     "github.com/ServiceWeaver/onlineboutique/shippingservice/T",
   ],
 ]
+

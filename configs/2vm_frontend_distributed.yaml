@@ -1,0 +1,9 @@
+appConfig: "weaver.toml"
+listeners:
+  - name: boutique
+    public: true
+    port: 8080
+groups:
+  - name: frontend-group
+    components:
+      - github.com/ServiceWeaver/onlineboutique/frontend/T

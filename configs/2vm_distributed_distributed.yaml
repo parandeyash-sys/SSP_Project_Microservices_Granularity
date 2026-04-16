@@ -1,0 +1,5 @@
+appConfig: "weaver.toml"
+listeners:
+  - name: boutique
+    public: true
+    port: 8080

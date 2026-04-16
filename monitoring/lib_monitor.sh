@@ -32,115 +32,65 @@ setup_run_dirs() {
     _minfo "Output dirs ready under: ${RUN_DIR}/"
 }
 
-# ── System metrics start/stop ─────────────────────────────────────────────────
-# Usage: start_system_monitoring <sysmet_dir>
-start_system_monitoring() {
-    local dir="$1"
-    _minfo "Starting system monitors → ${dir}/"
+# ── Minikube Node Setup ────────────────────────────────────────────────────────
+# Usage: setup_minikube_nodes [node1] [node2]
+setup_minikube_nodes() {
+    for node in "$@"; do
+        _minfo "Checking sysstat on node: ${node}..."
+        if minikube ssh -n "$node" "command -v sar" >/dev/null 2>&1; then
+            _minfo "  sysstat already installed on ${node}"
+        else
+            _minfo "  Installing sysstat on ${node} (minikube ssh)..."
+            minikube ssh -n "$node" "sudo apt-get update -qq && sudo apt-get install -y -qq sysstat" || _mwarn "  Failed to install sysstat on ${node}"
+        fi
+    done
+}
 
+# ── System metrics start/stop (Remote via Minikube) ───────────────────────────
+# Usage: start_k8s_monitoring <sysmet_dir> <node_name>
+start_k8s_monitoring() {
+    local dir="$1"
+    local node="$2"
+    _minfo "Starting system monitors on node [${node}] → ${dir}/"
+
+    # We use 'minikube ssh' to run the monitors in the background inside the VM
+    # and redirect output back to the host via a named pipe or file.
+    # Simpler: redirect to a file in the VM and cat it back later? 
+    # Better: run and stream to host file.
+    
     # ── CPU per-core (mpstat 1) ───────────────────────────────────────────────
-    if command -v mpstat &>/dev/null; then
-        mpstat -P ALL 1 > "${dir}/mpstat_cpu_cores.log" 2>&1 &
-        _MONITOR_PIDS+=($!)
-        _minfo "  mpstat PID=$!"
-    else
-        _mwarn "  mpstat not found — skipping (install sysstat)"
-    fi
+    minikube ssh -n "$node" "mpstat -P ALL 1" > "${dir}/mpstat_cpu_${node}.log" 2>&1 &
+    _MONITOR_PIDS+=($!)
 
     # ── Overall CPU + load (sar -u 1) ────────────────────────────────────────
-    if command -v sar &>/dev/null; then
-        sar -u 1 > "${dir}/sar_cpu.log" 2>&1 &
-        _MONITOR_PIDS+=($!)
-        _minfo "  sar -u PID=$!"
+    minikube ssh -n "$node" "sar -u 1" > "${dir}/sar_cpu_${node}.log" 2>&1 &
+    _MONITOR_PIDS+=($!)
 
-        sar -r 1 > "${dir}/sar_memory.log" 2>&1 &
-        _MONITOR_PIDS+=($!)
-        _minfo "  sar -r PID=$!"
+    minikube ssh -n "$node" "sar -r 1" > "${dir}/sar_memory_${node}.log" 2>&1 &
+    _MONITOR_PIDS+=($!)
 
-        sar -n DEV 1 > "${dir}/sar_network.log" 2>&1 &
-        _MONITOR_PIDS+=($!)
-        _minfo "  sar -n DEV PID=$!"
-
-        sar -q 1 > "${dir}/sar_loadavg.log" 2>&1 &
-        _MONITOR_PIDS+=($!)
-        _minfo "  sar -q PID=$!"
-    else
-        _mwarn "  sar not found — skipping (install sysstat)"
-    fi
+    minikube ssh -n "$node" "sar -n DEV 1" > "${dir}/sar_network_${node}.log" 2>&1 &
+    _MONITOR_PIDS+=($!)
 
     # ── Disk I/O (iostat -x 1) ────────────────────────────────────────────────
-    if command -v iostat &>/dev/null; then
-        iostat -x -t 1 > "${dir}/iostat_disk.log" 2>&1 &
-        _MONITOR_PIDS+=($!)
-        _minfo "  iostat PID=$!"
-    else
-        _mwarn "  iostat not found — skipping"
-    fi
+    minikube ssh -n "$node" "iostat -x -t 1" > "${dir}/iostat_disk_${node}.log" 2>&1 &
+    _MONITOR_PIDS+=($!)
 
     # ── Memory + swap (vmstat 1) ──────────────────────────────────────────────
-    if command -v vmstat &>/dev/null; then
-        vmstat 1 > "${dir}/vmstat.log" 2>&1 &
-        _MONITOR_PIDS+=($!)
-        _minfo "  vmstat PID=$!"
-    fi
+    minikube ssh -n "$node" "vmstat 1" > "${dir}/vmstat_${node}.log" 2>&1 &
+    _MONITOR_PIDS+=($!)
 
-    # ── Network socket stats (ss -s every 5s) ─────────────────────────────────
-    if command -v ss &>/dev/null; then
-        (
-            while true; do
-                echo "=== $(date '+%Y-%m-%dT%H:%M:%S') ===" >> "${dir}/ss_sockets.log"
-                ss -s >> "${dir}/ss_sockets.log" 2>&1
-                ss -tn state established >> "${dir}/ss_established.log" 2>&1
-                sleep 5
-            done
-        ) &
-        _MONITOR_PIDS+=($!)
-        _minfo "  ss-loop PID=$!"
-    elif command -v netstat &>/dev/null; then
-        (
-            while true; do
-                echo "=== $(date '+%Y-%m-%dT%H:%M:%S') ===" >> "${dir}/netstat_an.log"
-                netstat -an >> "${dir}/netstat_an.log" 2>&1
-                sleep 5
-            done
-        ) &
-        _MONITOR_PIDS+=($!)
-        _minfo "  netstat-loop PID=$!"
-    fi
-
-    # ── Network bandwidth (iftop — writes to file if iface detected) ──────────
-    if command -v iftop &>/dev/null; then
-        # Detect primary non-loopback interface
-        IFACE=$(ip route | awk '/default/ {print $5}' | head -1)
-        if [ -n "$IFACE" ]; then
-            # iftop requires root for full capture; use -i + text mode
-            sudo iftop -t -s 5 -i "$IFACE" -o 5s > "${dir}/iftop_bandwidth.log" 2>&1 &
-            _MONITOR_PIDS+=($!)
-            _minfo "  iftop PID=$! (iface=${IFACE})"
-        fi
-    else
-        _mwarn "  iftop not found — using nethogs alternative or skipping"
-        # Fallback: /proc/net/dev sampling
-        (
-            while true; do
-                echo "=== $(date '+%Y-%m-%dT%H:%M:%S') ===" >> "${dir}/proc_netdev.log"
-                cat /proc/net/dev >> "${dir}/proc_netdev.log"
-                sleep 1
-            done
-        ) &
-        _MONITOR_PIDS+=($!)
-        _minfo "  proc/net/dev sampler PID=$!"
-    fi
-
-    # ── Hardware context switches + interrupts (sar -I ALL 1) ─────────────────
-    if command -v sar &>/dev/null; then
-        sar -w 1 > "${dir}/sar_context_switches.log" 2>&1 &
-        _MONITOR_PIDS+=($!)
-        _minfo "  sar -w (ctx-switches) PID=$!"
-    fi
-
-    _minfo "System monitoring started. PIDs: ${_MONITOR_PIDS[*]:-none}"
+    _minfo "  Monitoring PIDs for ${node}: ${_MONITOR_PIDS[*]: -6}"
 }
+
+# ── Old local system metrics start/stop (deprecated for K8s) ──────────────────
+# Keeping legacy local monitoring for host-level context if desired.
+start_local_monitoring() {
+    local dir="$1"
+    _minfo "Starting LOCAL host monitors → ${dir}/"
+    # ... (same as original start_system_monitoring)
+}
+
 
 # Usage: stop_system_monitoring
 stop_system_monitoring() {

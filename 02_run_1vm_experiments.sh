@@ -78,18 +78,28 @@ kill_app() {
 
 # ── Preflight checks ───────────────────────────────────────────────────────────
 [ -f "$BINARY" ]                  || error "Binary not found: ${BINARY}. Run 01_clone_build.sh first."
-command -v weaver   > /dev/null   || error "'weaver' not in PATH. Run 00_install_deps.sh and source ~/.bashrc."
+command -v weaver-kube > /dev/null || error "'weaver-kube' not in PATH. Run 00_install_deps.sh and source ~/.bashrc."
 command -v locust   > /dev/null   || error "'locust' not in PATH. Activate the venv: source ~/ssp_venv/bin/activate"
 command -v curl     > /dev/null   || error "'curl' not installed."
+command -v minikube > /dev/null   || error "'minikube' not installed."
+command -v kubectl  > /dev/null   || error "'kubectl' not installed."
 
 mkdir -p "$RESULTS_DIR"
 source "monitoring/lib_monitor.sh"
+
+info "Starting Minikube (1 node) for 1-VM experiments..."
+minikube status >/dev/null 2>&1 || minikube start --nodes 1 --driver=virtualbox
+eval $(minikube -p minikube docker-env)
+
+# Ensure sysstat is inside the node
+setup_minikube_nodes "minikube"
+
 echo "[$(timestamp)] [1VM] ======== Starting 1-VM experiment suite ========" | tee -a "$LOG"
 
 # ── Main experiment loop ───────────────────────────────────────────────────────
 for CONFIG in "${CONFIGS[@]}"; do
-    TOML="${CONFIGS_DIR}/${CONFIG}.toml"
-    [ -f "$TOML" ] || { warn "Config not found: ${TOML} — skipping"; continue; }
+    YAML_CONFIG="${CONFIGS_DIR}/${CONFIG}.yaml"
+    [ -f "$YAML_CONFIG" ] || { warn "Config not found: ${YAML_CONFIG} — skipping"; continue; }
 
     section "CONFIG: ${CONFIG}"
     echo "[$(timestamp)] [1VM] Config=${CONFIG} START" | tee -a "$LOG"
@@ -104,18 +114,28 @@ for CONFIG in "${CONFIGS[@]}"; do
         info "▶  Config=${CONFIG} | VUs=${VUS} | Spawn rate=${SPAWN_RATE}/s | Duration=${RUN_TIME}"
         echo "[$(timestamp)] [1VM] Config=${CONFIG} VUs=${VUS} START" | tee -a "$LOG"
 
-        # ── Start app ──────────────────────────────────────────────────────────
-        info "Starting app with config: ${TOML}"
-        weaver multi deploy "$TOML" > "${RUN_DIR}/app.log" 2>&1 &
-        APP_PID=$!
-        info "App PID: ${APP_PID}"
+        # ── Start app via weaver-kube ──────────────────────────────────────────
+        info "Deploying with weaver-kube: ${YAML_CONFIG}"
+        # deploy builds docker image and outputs path to generated yaml
+        KUBE_YAML=$(weaver-kube deploy "$YAML_CONFIG" | tail -n 1)
+        [ -f "$KUBE_YAML" ] || error "weaver-kube deploy failed to generate yaml"
+        
+        info "Applying generated K8s manifest: ${KUBE_YAML}"
+        kubectl apply -f "$KUBE_YAML" | tee "${RUN_DIR}/kubectl_apply.log"
 
+        info "Waiting for all pods to be Ready..."
+        kubectl wait --for=condition=Ready pods --all --timeout=300s || warn "Some pods not ready!"
+        
+        info "Starting port-forward for service/boutique 8080..."
+        kubectl port-forward svc/boutique 8080:8080 > "${RUN_DIR}/port-forward.log" 2>&1 &
+        APP_PID=$!
+        
         wait_for_ready "${HOST}" "$READINESS_TIMEOUT"
         info "Warming up for ${WARMUP_SLEEP}s..."
         sleep "$WARMUP_SLEEP"
 
-        # ── Start System Monitoring ────────────────────────────────────────────
-        start_system_monitoring "$SYSMET_DIR"
+        # ── Start System Monitoring (Node 1) ───────────────────────────────────
+        start_k8s_monitoring "$SYSMET_DIR" "minikube"
 
         # ── Run Profiling & Locust ─────────────────────────────────────────────
         # Schedule pprof collection to run midway through the 300s test
@@ -162,8 +182,13 @@ for CONFIG in "${CONFIGS[@]}"; do
         fi
 
         # ── Stop app ───────────────────────────────────────────────────────────
-        kill_app "$APP_PID"
-        sleep 5   # Let ports free before next run
+        kill_app "$APP_PID"  # kills port-forward
+        
+        info "Cleaning up K8s deployment..."
+        kubectl delete -f "$KUBE_YAML" >/dev/null 2>&1 || true
+        
+        # Ensure pods are fully terminating before continuing
+        sleep 5
     done
 
     echo "[$(timestamp)] [1VM] Config=${CONFIG} DONE" | tee -a "$LOG"

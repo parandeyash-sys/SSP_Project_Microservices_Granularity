@@ -2,44 +2,25 @@
 # =============================================================================
 # 02_run_2vm_experiments.sh — Run all 4 × 2-VM configuration experiments
 # =============================================================================
-# Uses Service Weaver's SSH deployer to distribute components across 2 machines.
-#
-# SETUP REQUIRED BEFORE RUNNING:
-# ─────────────────────────────────────────────────────────────────────────────
-#  1. Set VM2_HOST to the IP of your second VM:
-#       export VM2_HOST="192.168.x.x"
-#
-#  2. Ensure passwordless SSH from VM1 (this machine) to VM2:
-#       ssh-keygen -t ed25519 -f ~/.ssh/id_ssp -N ""
-#       ssh-copy-id -i ~/.ssh/id_ssp.pub user@${VM2_HOST}
-#       ssh -i ~/.ssh/id_ssp ${VM2_HOST} "echo ok"   # should print "ok"
-#
-#  3. Copy the boutique binary to VM2 (same path):
-#       scp onlineboutique/boutique ${VM2_HOST}:~/ssp/SSP_Online/onlineboutique/boutique
-#
-#  4. Install Go + weaver on VM2 (run 00_install_deps.sh there too).
-#
-# Then run:  ./02_run_2vm_experiments.sh
+# Uses Minikube with 2 nodes to simulate a multi-VM environment.
+# Inject nodeAffinity to pin specific components to specific nodes.
 # =============================================================================
 set -euo pipefail
 
 export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"
 
 # ── Configuration ──────────────────────────────────────────────────────────────
-VM1_HOST="${VM1_HOST:-127.0.0.1}"      # This machine's IP reachable from VM2
-VM2_HOST="${VM2_HOST:-}"               # Second VM's IP — MUST be set!
-
 BOUTIQUE_DIR="onlineboutique"
 BINARY="${BOUTIQUE_DIR}/boutique"
 CONFIGS_DIR="configs"
 RESULTS_DIR="results/2vm"
 LOG="experiment.log"
-HOST="http://localhost:8080"           # Locust connects to local listener
+HOST="http://localhost:8080"
 APP_PORT=8080
 SPAWN_DIVISOR=30
 RUN_TIME="300s"
-WARMUP_SLEEP=10
-READINESS_TIMEOUT=90                   # SSH deploy takes a bit longer
+WARMUP_SLEEP=15
+READINESS_TIMEOUT=120
 
 WORKLOADS=(500 750 1000 1250 1500 1750 2000)
 
@@ -50,15 +31,13 @@ CONFIGS=(
     "2vm_distributed_distributed"
 )
 
-# ── SSH Locations file ─────────────────────────────────────────────────────────
-SSH_LOCATIONS_FILE="ssh_locations_2vm.txt"
-
 # ── Colour helpers ─────────────────────────────────────────────────────────────
 GREEN='\033[0;32m'; YELLOW='\033[1;33m'; RED='\033[0;31m'; CYAN='\033[0;36m'; NC='\033[0m'
 info()    { echo -e "${GREEN}[INFO]${NC}    $*"; }
 warn()    { echo -e "${YELLOW}[WARN]${NC}    $*"; }
 error()   { echo -e "${RED}[ERROR]${NC}   $*"; exit 1; }
 section() { echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"; echo -e "  $*"; echo -e "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"; }
+
 timestamp() { date '+%Y-%m-%d %H:%M:%S'; }
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
@@ -75,42 +54,58 @@ wait_for_ready() {
 kill_app() {
     local pid="$1"
     if kill -0 "$pid" 2>/dev/null; then
-        info "Stopping SSH-deployed app (PID ${pid})..."
+        info "Stopping port-forward (PID ${pid})..."
         kill "$pid" 2>/dev/null || true
-        sleep 5
+        sleep 2
         kill -9 "$pid" 2>/dev/null || true
     fi
 }
 
 # ── Preflight checks ───────────────────────────────────────────────────────────
-[ -f "$BINARY" ]                     || error "Binary not found. Run 01_clone_build.sh."
-command -v weaver     > /dev/null    || error "'weaver' not in PATH."
-command -v locust     > /dev/null    || error "'locust' not in PATH."
-
-if [ -z "$VM2_HOST" ]; then
-    error "VM2_HOST is not set. Export it first: export VM2_HOST=<ip-of-second-vm>"
-fi
-info "Using VM1=${VM1_HOST}  VM2=${VM2_HOST}"
-
-# Write / refresh SSH locations file
-printf "%s\n%s\n" "$VM1_HOST" "$VM2_HOST" > "$SSH_LOCATIONS_FILE"
-info "SSH locations file: ${SSH_LOCATIONS_FILE}"
-
-# Quick SSH connectivity check
-ssh -o BatchMode=yes -o ConnectTimeout=5 "$VM2_HOST" echo "SSH to VM2 OK" \
-    || error "Cannot SSH to ${VM2_HOST}. Set up passwordless SSH first (see header comments)."
+[ -f "$BINARY" ]                  || error "Binary not found. Run 01_clone_build.sh."
+command -v weaver-kube > /dev/null || error "'weaver-kube' not in PATH."
+command -v minikube > /dev/null   || error "'minikube' not installed."
+command -v kubectl  > /dev/null   || error "'kubectl' not installed."
 
 mkdir -p "$RESULTS_DIR"
 source "monitoring/lib_monitor.sh"
+
+info "Starting Minikube (2 nodes) for 2-VM experiments..."
+minikube status >/dev/null 2>&1 || minikube start --nodes 2 --driver=virtualbox
+eval $(minikube -p minikube docker-env)
+# Ensure sysstat in both nodes
+setup_minikube_nodes "minikube" "minikube-m02"
+
 echo "[$(timestamp)] [2VM] ======== Starting 2-VM experiment suite ========" | tee -a "$LOG"
 
 # ── Main experiment loop ───────────────────────────────────────────────────────
 for CONFIG in "${CONFIGS[@]}"; do
-    TOML="${CONFIGS_DIR}/${CONFIG}.toml"
-    [ -f "$TOML" ] || { warn "Config not found: ${TOML} — skipping"; continue; }
+    YAML_CONFIG="${CONFIGS_DIR}/${CONFIG}.yaml"
+    [ -f "$YAML_CONFIG" ] || { warn "Config not found: ${YAML_CONFIG} — skipping"; continue; }
 
     section "CONFIG: ${CONFIG}"
     echo "[$(timestamp)] [2VM] Config=${CONFIG} START" | tee -a "$LOG"
+
+    # Define node mapping based on config
+    case "$CONFIG" in
+        "2vm_frontend_colocated")
+            NODE1="frontend-group"
+            NODE2="backend-group"
+            ;;
+        "2vm_frontend_distributed")
+            NODE1="frontend-group"
+            # Catch all remaining (distributed components) for Node 2
+            NODE2="adservice,cartservice,cartCache,checkoutservice,currencyservice,emailservice,paymentservice,productcatalogservice,recommendationservice,shippingservice"
+            ;;
+        "2vm_colocated_colocated")
+            NODE1="backend-half1"
+            NODE2="backend-half2"
+            ;;
+        "2vm_distributed_distributed")
+            NODE1="frontend,adservice,cartservice,cartCache,checkoutservice"
+            NODE2="currencyservice,emailservice,paymentservice,productcatalogservice,recommendationservice,shippingservice"
+            ;;
+    esac
 
     for VUS in "${WORKLOADS[@]}"; do
         SPAWN_RATE=$(( VUS / SPAWN_DIVISOR ))
@@ -122,28 +117,41 @@ for CONFIG in "${CONFIGS[@]}"; do
         info "▶  Config=${CONFIG} | VUs=${VUS} | Spawn=${SPAWN_RATE}/s | Duration=${RUN_TIME}"
         echo "[$(timestamp)] [2VM] Config=${CONFIG} VUs=${VUS} START" | tee -a "$LOG"
 
-        # ── Start app via SSH deployer ─────────────────────────────────────────
-        info "Starting SSH-deployed app with: ${TOML}"
-        weaver ssh deploy "$TOML" > "${RUN_DIR}/app.log" 2>&1 &
-        APP_PID=$!
-        info "Deployer PID: ${APP_PID}"
+        # ── Start app via weaver-kube ──────────────────────────────────────────
+        info "Generating K8s manifest for: ${YAML_CONFIG}"
+        RAW_KUBE_YAML=$(weaver-kube deploy "$YAML_CONFIG" | tail -n 1)
+        [ -f "$RAW_KUBE_YAML" ] || error "weaver-kube deploy failed"
+
+        INJECTED_YAML="${RUN_DIR}/weaver_kube_injected.yaml"
+        info "Injecting nodeAffinity (Node1=${NODE1}, Node2=${NODE2})..."
+        python3 scripts/inject_nodes.py "$RAW_KUBE_YAML" "$INJECTED_YAML" "$NODE1" "$NODE2"
+
+        info "Applying manifest: ${INJECTED_YAML}"
+        kubectl apply -f "$INJECTED_YAML" | tee "${RUN_DIR}/kubectl_apply.log"
+
+        info "Waiting for all pods to be Ready..."
+        kubectl wait --for=condition=Ready pods --all --timeout=300s || warn "Some pods not ready!"
+
+        info "Starting port-forward for service/boutique 8080..."
+        kubectl port-forward svc/boutique 8080:8080 > "${RUN_DIR}/port-forward.log" 2>&1 &
+        PF_PID=$!
 
         wait_for_ready "${HOST}" "$READINESS_TIMEOUT"
-        info "Warming up ${WARMUP_SLEEP}s..."
+        info "Warming up for ${WARMUP_SLEEP}s..."
         sleep "$WARMUP_SLEEP"
 
-        # ── Start System Monitoring ────────────────────────────────────────────
-        start_system_monitoring "$SYSMET_DIR"
+        # ── Start System Monitoring (Both Nodes) ───────────────────────────────
+        start_k8s_monitoring "$SYSMET_DIR" "minikube"
+        start_k8s_monitoring "$SYSMET_DIR" "minikube-m02"
 
         # ── Run Profiling & Locust ─────────────────────────────────────────────
-        # Schedule pprof collection to run midway through the 300s test
         (
             sleep 120
             collect_pprof "localhost:8080" "$PPROF_DIR" 60
         ) &
         PPROF_SCHED_PID=$!
 
-        # ── Run Locust ─────────────────────────────────────────────────────────
+        info "Running Locust..."
         locust \
             -f locustfile.py \
             --headless \
@@ -157,7 +165,6 @@ for CONFIG in "${CONFIGS[@]}"; do
             2>&1 | tee "${LOCUST_DIR}/locust.log"
 
         STATUS=$?
-        
         wait $PPROF_SCHED_PID 2>/dev/null || true
 
         # ── Stop System Monitoring ─────────────────────────────────────────────
@@ -177,14 +184,17 @@ for CONFIG in "${CONFIGS[@]}"; do
             echo "[$(timestamp)] [2VM] Config=${CONFIG} VUs=${VUS} PARTIAL (exit=${STATUS})" | tee -a "$LOG"
         fi
 
-        kill_app "$APP_PID"
-        sleep 8   # SSH connections take longer to fully close
+        kill_app "$PF_PID"
+        info "Cleaning up K8s deployment..."
+        kubectl delete -f "$INJECTED_YAML" >/dev/null 2>&1 || true
+        sleep 10  # Wait for pods to terminate
     done
 
     echo "[$(timestamp)] [2VM] Config=${CONFIG} DONE" | tee -a "$LOG"
+    info "All workload levels complete for config: ${CONFIG}"
+    echo ""
 done
 
 section "2-VM Experiments Complete"
 echo "[$(timestamp)] [2VM] ======== All 2-VM experiments complete ========" | tee -a "$LOG"
 info "Results saved to: ${RESULTS_DIR}/"
-info "Next: ./03_collect_results.sh && python3 04_plot_results.py"

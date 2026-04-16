@@ -22,7 +22,26 @@ info "Updating apt and installing base packages..."
 sudo apt-get update -qq
 sudo apt-get install -y -qq \
     curl wget git build-essential python3 python3-pip python3-venv \
-    openssh-client openssh-server
+    openssh-client openssh-server apt-transport-https virtualbox virtualbox-ext-pack docker.io
+
+# ── 1.5 Minikube & kubectl ────────────────────────────────────────────────────
+if command -v minikube &>/dev/null; then
+    info "Minikube already installed."
+else
+    info "Installing Minikube..."
+    curl -sLo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    sudo install minikube /usr/local/bin/
+    rm minikube
+fi
+
+if command -v kubectl &>/dev/null; then
+    info "kubectl already installed."
+else
+    info "Installing kubectl..."
+    curl -sLO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+    sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+    rm kubectl
+fi
 
 # ── 2. Go 1.22 ───────────────────────────────────────────────────────────────
 GO_VERSION="1.22.3"
@@ -56,12 +75,10 @@ fi
 go version || error "Go installation failed"
 
 # ── 3. Service Weaver CLI ─────────────────────────────────────────────────────
-info "Installing Service Weaver CLI (weaver)..."
+info "Installing Service Weaver CLI (weaver) and weaver kube..."
 go install github.com/ServiceWeaver/weaver/cmd/weaver@latest
-go install github.com/ServiceWeaver/weaver-multi/cmd/weaver-multi@latest   2>/dev/null || true
-go install github.com/ServiceWeaver/weaver-ssh/cmd/weaver-ssh@latest       2>/dev/null || true
+go install github.com/ServiceWeaver/weaver-kube/cmd/weaver-kube@latest
 
-# The multi and ssh deployers ship inside the main weaver cmd in recent versions
 weaver version || error "weaver CLI installation failed"
 info "weaver CLI installed: $(weaver version)"
 
@@ -73,7 +90,7 @@ python3 -m venv "$VENV_DIR"
 source "${VENV_DIR}/bin/activate"
 
 pip install --quiet --upgrade pip
-pip install --quiet locust matplotlib pandas seaborn tomli
+pip install --quiet locust matplotlib pandas seaborn tomli PyYAML
 
 locust --version || error "Locust installation failed"
 info "Locust installed: $(locust --version)"
@@ -92,7 +109,10 @@ echo ""
 info "All dependencies installed successfully."
 info "Go:     $(go version)"
 info "weaver: $(weaver version 2>/dev/null || echo 'check PATH')"
-info "locust: $(locust --version)"
+info "weaver-kube: $(weaver-kube version 2>/dev/null || echo 'check PATH')"
+info "minikube: $(minikube version --short)"
+info "kubectl:  $(kubectl version --client --short 2>/dev/null || kubectl version --client)"
+info "locust:   $(locust --version)"
 echo ""
 warn "ACTION REQUIRED: Run  'source ~/.bashrc'  or open a new terminal before proceeding."
 echo "[$TIMESTAMP] [SETUP] Dependency installation complete" | tee -a "$LOG"

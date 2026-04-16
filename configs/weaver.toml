@@ -1,0 +1,3 @@
+[serviceweaver]
+name   = "boutique"
+binary = "../onlineboutique/boutique"
