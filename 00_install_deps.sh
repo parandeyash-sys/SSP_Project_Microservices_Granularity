@@ -19,10 +19,7 @@ error() { echo -e "${RED}[ERROR]${NC} $*"; exit 1; }
 
 # ── 1. System packages ────────────────────────────────────────────────────────
 info "Updating apt and installing base packages..."
-sudo apt-get update -qq
-sudo apt-get install -y -qq \
-    curl wget git build-essential python3 python3-pip python3-venv \
-    openssh-client openssh-server apt-transport-https virtualbox virtualbox-ext-pack docker.io
+sudo apt install openssh-client openssh-server apt-transport-https virtualbox virtualbox-ext-pack docker.io
 
 # ── 1.5 Minikube & kubectl ────────────────────────────────────────────────────
 if command -v minikube &>/dev/null; then

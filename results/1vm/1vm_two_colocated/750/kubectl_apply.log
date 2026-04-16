@@ -1,0 +1,10 @@
+role.rbac.authorization.k8s.io/serviceweaver-pods-getter created
+rolebinding.rbac.authorization.k8s.io/serviceweaver-default-pods-getter created
+configmap/config-c327fb7d created
+deployment.apps/ob-g1-c327fb7d-242d29a0 created
+horizontalpodautoscaler.autoscaling/ob-g1-c327fb7d-242d29a0 created
+deployment.apps/ob-g2-c327fb7d-bca06cd7 created
+horizontalpodautoscaler.autoscaling/ob-g2-c327fb7d-bca06cd7 created
+service/boutique-c327fb7d created
+deployment.apps/ob-weaver-main-c327fb7d-c5fedf9f created
+horizontalpodautoscaler.autoscaling/ob-weaver-main-c327fb7d-c5fedf9f created

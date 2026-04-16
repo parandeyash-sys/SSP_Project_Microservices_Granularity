@@ -23,3 +23,6 @@ colocate = [
   ],
 ]
 
+[multi]
+listeners.boutique = {address = "localhost:8080"}
+

@@ -25,6 +25,7 @@ BINARY="${BOUTIQUE_DIR}/boutique"
 CONFIGS_DIR="configs"
 RESULTS_DIR="results/1vm"
 LOG="experiment.log"
+MK_PROFILE="ssp-study"   # Use isolated profile to avoid driver conflicts
 HOST="http://localhost:8080"
 APP_PORT=8080
 SPAWN_DIVISOR=30          # spawn rate = VUs / SPAWN_DIVISOR  (≈1 new user/s per 30 VUs)
@@ -87,12 +88,24 @@ command -v kubectl  > /dev/null   || error "'kubectl' not installed."
 mkdir -p "$RESULTS_DIR"
 source "monitoring/lib_monitor.sh"
 
-info "Starting Minikube (1 node) for 1-VM experiments..."
-minikube status >/dev/null 2>&1 || minikube start --nodes 1 --driver=virtualbox
-eval $(minikube -p minikube docker-env)
+info "Checking Minikube status (Profile: ${MK_PROFILE})..."
+# Start minikube with the isolated profile and virtualbox driver
+if ! minikube start -p "$MK_PROFILE" --nodes 1 --driver=virtualbox --memory=4096 --cpus=2; then
+    error "Minikube failed to start with profile ${MK_PROFILE}. Try: minikube delete -p ${MK_PROFILE}"
+fi
+
+# Point kubectl and docker to the new profile
+minikube -p "$MK_PROFILE" profile "$MK_PROFILE"
+eval $(minikube -p "$MK_PROFILE" docker-env)
+
+# Clean up any residual deployments from previous runs/app names
+info "Cleaning up old deployments..."
+kubectl delete deploy,svc,hpa,pod -l serviceweaver/app=boutique --ignore-not-found=true
+kubectl delete deploy,svc,hpa,pod -l serviceweaver/app=ob --ignore-not-found=true
+sleep 5 # Give it a moment to finish deletion
 
 # Ensure sysstat is inside the node
-setup_minikube_nodes "minikube"
+setup_minikube_nodes "$MK_PROFILE"
 
 echo "[$(timestamp)] [1VM] ======== Starting 1-VM experiment suite ========" | tee -a "$LOG"
 
@@ -115,7 +128,11 @@ for CONFIG in "${CONFIGS[@]}"; do
         echo "[$(timestamp)] [1VM] Config=${CONFIG} VUs=${VUS} START" | tee -a "$LOG"
 
         # ── Start app via weaver-kube ──────────────────────────────────────────
-        info "Deploying with weaver-kube: ${YAML_CONFIG}"
+        # Clean up any existing ob deployments before starting a new one
+        kubectl delete deploy,svc,hpa,pod -l serviceweaver/app=ob --ignore-not-found=true
+        sleep 5
+
+        info "Generating K8s manifest for: ${YAML_CONFIG}"
         # deploy builds docker image and outputs path to generated yaml
         KUBE_YAML=$(weaver-kube deploy "$YAML_CONFIG" | tail -n 1)
         [ -f "$KUBE_YAML" ] || error "weaver-kube deploy failed to generate yaml"
@@ -126,8 +143,12 @@ for CONFIG in "${CONFIGS[@]}"; do
         info "Waiting for all pods to be Ready..."
         kubectl wait --for=condition=Ready pods --all --timeout=300s || warn "Some pods not ready!"
         
-        info "Starting port-forward for service/boutique 8080..."
-        kubectl port-forward svc/boutique 8080:8080 > "${RUN_DIR}/port-forward.log" 2>&1 &
+        # Find the service name (Service Weaver adds a deployment ID hash)
+        SVC_NAME=$(kubectl get svc -l serviceweaver/app=ob -o jsonpath='{.items[0].metadata.name}')
+        [ -n "$SVC_NAME" ] || error "Could not find Service Weaver service (label: serviceweaver/app=ob)"
+
+        info "Starting port-forward for service/${SVC_NAME} 8080..."
+        kubectl port-forward "svc/${SVC_NAME}" 8080:8080 > "${RUN_DIR}/port-forward.log" 2>&1 &
         APP_PID=$!
         
         wait_for_ready "${HOST}" "$READINESS_TIMEOUT"
@@ -135,7 +156,7 @@ for CONFIG in "${CONFIGS[@]}"; do
         sleep "$WARMUP_SLEEP"
 
         # ── Start System Monitoring (Node 1) ───────────────────────────────────
-        start_k8s_monitoring "$SYSMET_DIR" "minikube"
+        start_k8s_monitoring "$SYSMET_DIR" "$MK_PROFILE"
 
         # ── Run Profiling & Locust ─────────────────────────────────────────────
         # Schedule pprof collection to run midway through the 300s test

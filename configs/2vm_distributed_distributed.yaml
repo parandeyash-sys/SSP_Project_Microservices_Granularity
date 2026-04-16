@@ -3,3 +3,37 @@ listeners:
   - name: boutique
     public: true
     port: 8080
+groups:
+  - name: fe
+    components:
+      - github.com/ServiceWeaver/onlineboutique/frontend/weaver.Main
+  - name: ad
+    components:
+      - github.com/ServiceWeaver/onlineboutique/adservice/AdService
+  - name: cs
+    components:
+      - github.com/ServiceWeaver/onlineboutique/cartservice/CartService
+  - name: cc
+    components:
+      - github.com/ServiceWeaver/onlineboutique/cartservice/cartCache
+  - name: co
+    components:
+      - github.com/ServiceWeaver/onlineboutique/checkoutservice/CheckoutService
+  - name: cu
+    components:
+      - github.com/ServiceWeaver/onlineboutique/currencyservice/CurrencyService
+  - name: em
+    components:
+      - github.com/ServiceWeaver/onlineboutique/emailservice/EmailService
+  - name: pa
+    components:
+      - github.com/ServiceWeaver/onlineboutique/paymentservice/PaymentService
+  - name: pc
+    components:
+      - github.com/ServiceWeaver/onlineboutique/productcatalogservice/ProductCatalogService
+  - name: rc
+    components:
+      - github.com/ServiceWeaver/onlineboutique/recommendationservice/RecommendationService
+  - name: sh
+    components:
+      - github.com/ServiceWeaver/onlineboutique/shippingservice/ShippingService

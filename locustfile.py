@@ -63,7 +63,7 @@ def _fake_checkout_data():
         "country":             "United States",
         "credit_card_number":  random.choice(CREDIT_CARDS),
         "credit_card_expiration_month": str(random.randint(1, 12)),
-        "credit_card_expiration_year":  str(random.randint(2026, 2030)),
+        "credit_card_expiration_year":  str(random.randint(2027, 2032)),
         "credit_card_cvv":     str(random.randint(100, 999)),
     }
 

@@ -1,0 +1,39 @@
+[2026-04-16 23:43:17,447] yash-Inspiron-14-5440/INFO/locust.main: Starting Locust 2.43.4
+[2026-04-16 23:43:17,448] yash-Inspiron-14-5440/INFO/locust.main: Run time limit set to 300 seconds
+[2026-04-16 23:43:17,449] yash-Inspiron-14-5440/INFO/locust.runners: Ramping to 750 users at a rate of 25.00 per second
+[2026-04-16 23:43:46,521] yash-Inspiron-14-5440/INFO/locust.runners: All users spawned: {"BoutiqueUser": 750} (750 total users)
+[2026-04-16 23:48:17,276] yash-Inspiron-14-5440/INFO/locust.main: --run-time limit reached, shutting down
+[2026-04-16 23:48:17,361] yash-Inspiron-14-5440/INFO/locust.main: Shutting down (exit code 0)
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /                                                                          17060     0(0.00%) |      4       1      57      3 |   56.88        0.00
+GET      GET /?currency=X                                                               13575     0(0.00%) |      4       1      65      4 |   45.26        0.00
+GET      GET /?product_id=X                                                              1708     0(0.00%) |      4       2      37      4 |    5.70        0.00
+GET      GET /cart                                                                       6873     0(0.00%) |      4       1      62      4 |   22.92        0.00
+GET      GET /product/[id]                                                              11939     0(0.00%) |      4       2      60      4 |   39.81        0.00
+POST     POST /cart (add)                                                                8557     0(0.00%) |      7       3      73      6 |   28.53        0.00
+POST     POST /cart (pre-checkout add)                                                   3457     0(0.00%) |      7       3      85      6 |   11.53        0.00
+POST     POST /cart/checkout                                                             3457     0(0.00%) |      4       3      54      5 |   11.53        0.00
+POST     POST /cart/empty                                                                3508     0(0.00%) |      6       3      50      6 |   11.70        0.00
+POST     POST /setCurrency                                                               5072     0(0.00%) |      6       3      61      6 |   16.91        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                     75206     0(0.00%) |      4       1      85      4 |  250.77        0.00
+
+Response time percentiles (approximated)
+Type     Name                                                                                  50%    66%    75%    80%    90%    95%    98%    99%  99.9% 99.99%   100% # reqs
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+GET      GET /                                                                                   3      4      4      5      6      7     10     18     38     54     58  17060
+GET      GET /?currency=X                                                                        4      4      4      5      6      7     10     18     39     60     65  13575
+GET      GET /?product_id=X                                                                      4      4      4      5      6      7     11     22     31     37     37   1708
+GET      GET /cart                                                                               4      4      4      5      6      7     13     21     42     63     63   6873
+GET      GET /product/[id]                                                                       4      4      4      5      6      7     11     19     39     50     60  11939
+POST     POST /cart (add)                                                                        6      7      8      8     10     12     19     30     48     74     74   8557
+POST     POST /cart (pre-checkout add)                                                           6      7      8      8     10     12     16     28     61     86     86   3457
+POST     POST /cart/checkout                                                                     5      5      5      6      7      8     10     11     21     54     54   3457
+POST     POST /cart/empty                                                                        6      7      7      8      9     11     17     31     42     50     50   3508
+POST     POST /setCurrency                                                                       6      7      7      8      9     11     18     31     47     62     62   5072
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+         Aggregated                                                                              4      5      6      6      7      9     13     21     41     62     86  75206
+
+[locust] Test starting → target: http://localhost:8080
+[locust] Test complete.

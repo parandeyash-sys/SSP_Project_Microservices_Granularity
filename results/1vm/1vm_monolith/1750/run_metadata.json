@@ -1,0 +1,12 @@
+{
+  "vm_count": 1,
+  "config": "1vm_monolith",
+  "vus": 1750,
+  "run_time_seconds": 300,
+  "start_ts": "2026-04-16T18:02:04Z",
+  "hostname": "yash-Inspiron-14-5440",
+  "kernel": "6.17.0-19-generic",
+  "cpu_model": "13th Gen Intel(R) Core(TM) i5-1334U",
+  "cpu_cores": 12,
+  "mem_total_kb": 16052684
+}

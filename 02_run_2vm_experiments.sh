@@ -15,6 +15,7 @@ BINARY="${BOUTIQUE_DIR}/boutique"
 CONFIGS_DIR="configs"
 RESULTS_DIR="results/2vm"
 LOG="experiment.log"
+MK_PROFILE="ssp-study"   # Use isolated profile to avoid driver conflicts
 HOST="http://localhost:8080"
 APP_PORT=8080
 SPAWN_DIVISOR=30
@@ -70,11 +71,23 @@ command -v kubectl  > /dev/null   || error "'kubectl' not installed."
 mkdir -p "$RESULTS_DIR"
 source "monitoring/lib_monitor.sh"
 
-info "Starting Minikube (2 nodes) for 2-VM experiments..."
-minikube status >/dev/null 2>&1 || minikube start --nodes 2 --driver=virtualbox
-eval $(minikube -p minikube docker-env)
+info "Checking Minikube status (Profile: ${MK_PROFILE})..."
+if ! minikube start -p "$MK_PROFILE" --nodes 2 --driver=virtualbox --memory=4096 --cpus=2; then
+    error "Minikube failed to start with profile ${MK_PROFILE}. Try: minikube delete -p ${MK_PROFILE}"
+fi
+
+# Point kubectl and docker to the new profile
+minikube -p "$MK_PROFILE" profile "$MK_PROFILE"
+eval $(minikube -p "$MK_PROFILE" docker-env)
+
+# Clean up any residual deployments from previous runs/app names
+info "Cleaning up old deployments..."
+kubectl delete deploy,svc,hpa,pod -l serviceweaver/app=boutique --ignore-not-found=true
+kubectl delete deploy,svc,hpa,pod -l serviceweaver/app=ob --ignore-not-found=true
+sleep 5 # Give it a moment to finish deletion
+
 # Ensure sysstat in both nodes
-setup_minikube_nodes "minikube" "minikube-m02"
+setup_minikube_nodes "$MK_PROFILE" "${MK_PROFILE}-m02"
 
 echo "[$(timestamp)] [2VM] ======== Starting 2-VM experiment suite ========" | tee -a "$LOG"
 
@@ -89,21 +102,21 @@ for CONFIG in "${CONFIGS[@]}"; do
     # Define node mapping based on config
     case "$CONFIG" in
         "2vm_frontend_colocated")
-            NODE1="frontend-group"
-            NODE2="backend-group"
+            NODE1="fe"
+            NODE2="be"
             ;;
         "2vm_frontend_distributed")
-            NODE1="frontend-group"
-            # Catch all remaining (distributed components) for Node 2
-            NODE2="adservice,cartservice,cartCache,checkoutservice,currencyservice,emailservice,paymentservice,productcatalogservice,recommendationservice,shippingservice"
+            NODE1="fe"
+            # Distributed components in their own short-named groups
+            NODE2="ad,cs,cc,co,cu,em,pa,pc,rc,sh"
             ;;
         "2vm_colocated_colocated")
-            NODE1="backend-half1"
-            NODE2="backend-half2"
+            NODE1="g1"
+            NODE2="g2"
             ;;
         "2vm_distributed_distributed")
-            NODE1="frontend,adservice,cartservice,cartCache,checkoutservice"
-            NODE2="currencyservice,emailservice,paymentservice,productcatalogservice,recommendationservice,shippingservice"
+            NODE1="fe,ad,cs,cc,co"
+            NODE2="cu,em,pa,pc,rc,sh"
             ;;
     esac
 
@@ -124,7 +137,7 @@ for CONFIG in "${CONFIGS[@]}"; do
 
         INJECTED_YAML="${RUN_DIR}/weaver_kube_injected.yaml"
         info "Injecting nodeAffinity (Node1=${NODE1}, Node2=${NODE2})..."
-        python3 scripts/inject_nodes.py "$RAW_KUBE_YAML" "$INJECTED_YAML" "$NODE1" "$NODE2"
+        python3 scripts/inject_nodes.py "$RAW_KUBE_YAML" "$INJECTED_YAML" "$NODE1" "$NODE2" "$MK_PROFILE" "${MK_PROFILE}-m02"
 
         info "Applying manifest: ${INJECTED_YAML}"
         kubectl apply -f "$INJECTED_YAML" | tee "${RUN_DIR}/kubectl_apply.log"
@@ -132,8 +145,12 @@ for CONFIG in "${CONFIGS[@]}"; do
         info "Waiting for all pods to be Ready..."
         kubectl wait --for=condition=Ready pods --all --timeout=300s || warn "Some pods not ready!"
 
-        info "Starting port-forward for service/boutique 8080..."
-        kubectl port-forward svc/boutique 8080:8080 > "${RUN_DIR}/port-forward.log" 2>&1 &
+        # Find the service name (Service Weaver adds a deployment ID hash)
+        SVC_NAME=$(kubectl get svc -l serviceweaver/app=ob -o jsonpath='{.items[0].metadata.name}')
+        [ -n "$SVC_NAME" ] || error "Could not find Service Weaver service (label: serviceweaver/app=ob)"
+
+        info "Starting port-forward for service/${SVC_NAME} 8080..."
+        kubectl port-forward "svc/${SVC_NAME}" 8080:8080 > "${RUN_DIR}/port-forward.log" 2>&1 &
         PF_PID=$!
 
         wait_for_ready "${HOST}" "$READINESS_TIMEOUT"
@@ -141,8 +158,8 @@ for CONFIG in "${CONFIGS[@]}"; do
         sleep "$WARMUP_SLEEP"
 
         # ── Start System Monitoring (Both Nodes) ───────────────────────────────
-        start_k8s_monitoring "$SYSMET_DIR" "minikube"
-        start_k8s_monitoring "$SYSMET_DIR" "minikube-m02"
+        start_k8s_monitoring "$SYSMET_DIR" "$MK_PROFILE"
+        start_k8s_monitoring "$SYSMET_DIR" "${MK_PROFILE}-m02"
 
         # ── Run Profiling & Locust ─────────────────────────────────────────────
         (

@@ -1,0 +1,1 @@
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"__name__":"node_memory_MemAvailable_bytes","instance":"localhost:9100","job":"node_exporter"},"value":[1776367396.274,"5112102912"]}]}}

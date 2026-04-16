@@ -2,11 +2,10 @@
 import sys
 import yaml
 
-# Usage: ./inject_nodes.py input.yaml output.yaml node1_patterns node2_patterns
-# nodeX_patterns: comma-separated list of group names or component names to map to node X
+# Usage: ./inject_nodes.py input.yaml output.yaml node1_groups node2_groups [node1_name] [node2_name]
 
 if len(sys.argv) < 5:
-    print("Usage: ./inject_nodes.py input.yaml output.yaml node1_groups node2_groups")
+    print("Usage: ./inject_nodes.py input.yaml output.yaml node1_groups node2_groups [node1_name] [node2_name]")
     sys.exit(1)
 
 input_yaml = sys.argv[1]
@@ -14,8 +13,11 @@ output_yaml = sys.argv[2]
 node1_groups = sys.argv[3].split(",")
 node2_groups = sys.argv[4].split(",")
 
+# Dynamic node names (defaults to minikube and minikube-m02)
+node1_name = sys.argv[5] if len(sys.argv) > 5 else "minikube"
+node2_name = sys.argv[6] if len(sys.argv) > 6 else "minikube-m02"
+
 with open(input_yaml, 'r') as f:
-    # Service Weaver generates a multi-document YAML
     docs = list(yaml.load_all(f, Loader=yaml.FullLoader))
 
 for doc in docs:
@@ -25,18 +27,15 @@ for doc in docs:
     name = doc.get('metadata', {}).get('name', '')
     target_node = None
     
-    # Match deployment name to group
-    # Service Weaver names deployments like "boutique-groupname" or just "groupname"
-    # We'll check if any of our group patterns are in the deployment name
     for g in node1_groups:
         if g in name:
-            target_node = "minikube"
+            target_node = node1_name
             break
     
     if not target_node:
         for g in node2_groups:
             if g in name:
-                target_node = "minikube-m02"
+                target_node = node2_name
                 break
     
     if target_node:

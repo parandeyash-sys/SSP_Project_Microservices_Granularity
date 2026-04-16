@@ -117,7 +117,8 @@ source ~/ssp_venv/bin/activate
 | Error | Fix |
 |---|---|
 | `VirtualBox is not installed` | Ensure `virtualbox` is in your host path. |
-| `minikube start` hangs | Verify you have enabled VT-x/AMD-V in BIOS. |
+| `minikube start` hangs | Verify VT-x/AMD-V is enabled. |
+| `GUEST_DRIVER_MISMATCH` | The script uses a private profile `ssp-study` to avoid this. If it persists, run `minikube delete -p ssp-study`. |
 | `weaver-kube: command not found` | `source ~/.bashrc` or check `$HOME/go/bin`. |
 | Port 8080 busy | `fuser -k 8080/tcp` |
 

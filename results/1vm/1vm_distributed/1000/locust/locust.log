@@ -1,0 +1,41 @@
+[2026-04-17 01:04:50,717] yash-Inspiron-14-5440/INFO/locust.main: Starting Locust 2.43.4
+[2026-04-17 01:04:50,718] yash-Inspiron-14-5440/INFO/locust.main: Run time limit set to 300 seconds
+[2026-04-17 01:04:50,719] yash-Inspiron-14-5440/INFO/locust.runners: Ramping to 1000 users at a rate of 33.00 per second
+[2026-04-17 01:05:20,919] yash-Inspiron-14-5440/INFO/locust.runners: All users spawned: {"BoutiqueUser": 1000} (1000 total users)
+[2026-04-17 01:05:30,746] yash-Inspiron-14-5440/WARNING/root: CPU usage above 90%! This may constrain your throughput and may even give inconsistent response time measurements! See https://docs.locust.io/en/stable/running-distributed.html for how to distribute the load over multiple CPU cores or machines
+[2026-04-17 01:09:50,394] yash-Inspiron-14-5440/INFO/locust.main: --run-time limit reached, shutting down
+[2026-04-17 01:09:50,549] yash-Inspiron-14-5440/WARNING/locust.runners: CPU usage was too high at some point during the test! See https://docs.locust.io/en/stable/running-distributed.html for how to distribute the load over multiple CPU cores or machines
+[2026-04-17 01:09:50,549] yash-Inspiron-14-5440/INFO/locust.main: Shutting down (exit code 0)
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /                                                                          22353     0(0.00%) |     28       3     330     18 |   74.56        0.00
+GET      GET /?currency=X                                                               17945     0(0.00%) |     28       3     326     18 |   59.85        0.00
+GET      GET /?product_id=X                                                              2333     0(0.00%) |     28       3     260     18 |    7.78        0.00
+GET      GET /cart                                                                       9069     0(0.00%) |     28       3     319     18 |   30.25        0.00
+GET      GET /product/[id]                                                              15692     0(0.00%) |     28       3     267     18 |   52.34        0.00
+POST     POST /cart (add)                                                               11114     0(0.00%) |     51       6     463     33 |   37.07        0.00
+POST     POST /cart (pre-checkout add)                                                   4492     0(0.00%) |     50       7     411     32 |   14.98        0.00
+POST     POST /cart/checkout                                                             4491     0(0.00%) |     26       5     244     18 |   14.98        0.00
+POST     POST /cart/empty                                                                4443     0(0.00%) |     49       6     432     32 |   14.82        0.00
+POST     POST /setCurrency                                                               6751     0(0.00%) |     49       5     384     32 |   22.52        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                     98683     0(0.00%) |     34       3     463     21 |  329.15        0.00
+
+Response time percentiles (approximated)
+Type     Name                                                                                  50%    66%    75%    80%    90%    95%    98%    99%  99.9% 99.99%   100% # reqs
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+GET      GET /                                                                                  18     26     35     42     65     90    120    150    220    270    330  22353
+GET      GET /?currency=X                                                                       18     26     34     41     65     90    130    150    230    320    330  17945
+GET      GET /?product_id=X                                                                     18     26     34     41     63     85    120    140    220    260    260   2333
+GET      GET /cart                                                                              18     26     34     41     64     88    120    150    220    320    320   9069
+GET      GET /product/[id]                                                                      18     27     35     42     65     91    130    150    210    260    270  15692
+POST     POST /cart (add)                                                                       33     49     62     74    110    150    200    250    370    440    460  11114
+POST     POST /cart (pre-checkout add)                                                          32     47     61     71    110    160    200    240    370    410    410   4492
+POST     POST /cart/checkout                                                                    18     24     30     35     52     72    110    130    200    240    240   4491
+POST     POST /cart/empty                                                                       32     46     59     71    110    160    220    260    340    430    430   4443
+POST     POST /setCurrency                                                                      32     46     60     72    110    150    200    240    340    380    380   6751
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+         Aggregated                                                                             21     32     41     49     77    110    150    190    310    390    460  98683
+
+[locust] Test starting → target: http://localhost:8080
+[locust] Test complete.

@@ -1,0 +1,1 @@
+{"status":"success","data":{"resultType":"vector","result":[{"metric":{"__name__":"process_resident_memory_bytes","instance":"localhost:9100","job":"node_exporter"},"value":[1776362200.088,"21368832"]},{"metric":{"__name__":"process_resident_memory_bytes","instance":"localhost:9090","job":"prometheus"},"value":[1776362200.088,"104677376"]}]}}
