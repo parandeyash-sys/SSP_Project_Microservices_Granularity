@@ -12,7 +12,6 @@ colocate = [
     "github.com/ServiceWeaver/onlineboutique/frontend/T",
     "github.com/ServiceWeaver/onlineboutique/adservice/T",
     "github.com/ServiceWeaver/onlineboutique/cartservice/T",
-    "github.com/ServiceWeaver/onlineboutique/cartservice/cartCache",
     "github.com/ServiceWeaver/onlineboutique/checkoutservice/T",
     "github.com/ServiceWeaver/onlineboutique/currencyservice/T",
     "github.com/ServiceWeaver/onlineboutique/emailservice/T",

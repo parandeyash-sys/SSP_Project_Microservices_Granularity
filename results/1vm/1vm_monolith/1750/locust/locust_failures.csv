@@ -1,1 +1,11 @@
 Method,Name,Error,Occurrences
+GET,GET /,CatchResponseError('Unexpected status 0'),321
+POST,POST /setCurrency,CatchResponseError('setCurrency failed: 0'),99
+GET,GET /product/[id],CatchResponseError('Unexpected status 0'),258
+GET,GET /?currency=X,CatchResponseError('Unexpected status 0'),246
+POST,POST /cart/checkout,CatchResponseError('Checkout failed: 0'),65
+GET,GET /cart,CatchResponseError('Unexpected status 0'),143
+POST,POST /cart (pre-checkout add),"ConnectionResetError(104, 'Connection reset by peer')",65
+POST,POST /cart/empty,CatchResponseError('empty cart failed: 0'),54
+POST,POST /cart (add),CatchResponseError('Unexpected status 0'),155
+GET,GET /?product_id=X,CatchResponseError('Unexpected status 0'),38

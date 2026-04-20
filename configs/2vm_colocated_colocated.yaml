@@ -9,7 +9,6 @@ groups:
       - github.com/ServiceWeaver/onlineboutique/frontend/weaver.Main
       - github.com/ServiceWeaver/onlineboutique/adservice/AdService
       - github.com/ServiceWeaver/onlineboutique/cartservice/CartService
-      - github.com/ServiceWeaver/onlineboutique/cartservice/cartCache
       - github.com/ServiceWeaver/onlineboutique/checkoutservice/CheckoutService
       - github.com/ServiceWeaver/onlineboutique/currencyservice/CurrencyService
   - name: g2

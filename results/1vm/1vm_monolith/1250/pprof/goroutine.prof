@@ -44,17 +44,17 @@
                             <form method="POST" class="controls-form" action="/setCurrency" id="currency_form" >
                                 <select name="currency_code" onchange="document.getElementById('currency_form').submit();">
                                         
-                                    <option value="CAD" >CAD</option>
-                                    
                                     <option value="JPY" >JPY</option>
-                                    
-                                    <option value="EUR" >EUR</option>
                                     
                                     <option value="GBP" >GBP</option>
                                     
                                     <option value="TRY" >TRY</option>
                                     
                                     <option value="USD" selected="selected">USD</option>
+                                    
+                                    <option value="CAD" >CAD</option>
+                                    
+                                    <option value="EUR" >EUR</option>
                                     
                                 </select>
                             </form>
@@ -212,12 +212,12 @@
             <p class="footer-text">© 2020 Google Inc (<a href="https://github.com/GoogleCloudPlatform/microservices-demo">Source Code</a>)</p>
             <p class="footer-text">
                 <small>
-                    session-id: a7e98fc9-a949-42df-9aae-96dd0a523677 — 
-                    request-id: c2b6a8bc-1508-461d-9072-08cd7b58ea4f
+                    session-id: 209c98e7-3fe8-41c2-8b19-d5515e465492 — 
+                    request-id: 09cf08af-1639-4934-aa02-7192970246a2
                 </small>
                 <br/>
                 <small>
-                    <b>Host: </b>yash-Inspiron-14-5440
+                    <b>Host: </b>ob-weaver-main-9c57c1dc-254ae5f9-5f8f989c6f-7rfxx
                 </small>
             </p>
         </div>
@@ -251,12 +251,12 @@
             <p class="footer-text">© 2020 Google Inc (<a href="https://github.com/GoogleCloudPlatform/microservices-demo">Source Code</a>)</p>
             <p class="footer-text">
                 <small>
-                    session-id: a7e98fc9-a949-42df-9aae-96dd0a523677 — 
-                    request-id: c2b6a8bc-1508-461d-9072-08cd7b58ea4f
+                    session-id: 209c98e7-3fe8-41c2-8b19-d5515e465492 — 
+                    request-id: 09cf08af-1639-4934-aa02-7192970246a2
                 </small>
                 <br/>
                 <small>
-                    <b>Host: </b>yash-Inspiron-14-5440
+                    <b>Host: </b>ob-weaver-main-9c57c1dc-254ae5f9-5f8f989c6f-7rfxx
                 </small>
             </p>
         </div>

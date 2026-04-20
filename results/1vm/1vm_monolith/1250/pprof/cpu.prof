@@ -44,11 +44,11 @@
                             <form method="POST" class="controls-form" action="/setCurrency" id="currency_form" >
                                 <select name="currency_code" onchange="document.getElementById('currency_form').submit();">
                                         
-                                    <option value="TRY" >TRY</option>
-                                    
                                     <option value="JPY" >JPY</option>
                                     
                                     <option value="GBP" >GBP</option>
+                                    
+                                    <option value="TRY" >TRY</option>
                                     
                                     <option value="USD" selected="selected">USD</option>
                                     
@@ -212,12 +212,12 @@
             <p class="footer-text">© 2020 Google Inc (<a href="https://github.com/GoogleCloudPlatform/microservices-demo">Source Code</a>)</p>
             <p class="footer-text">
                 <small>
-                    session-id: ae0b39a2-1b12-467d-97b7-bc483a8d91db — 
-                    request-id: d81ed589-f70c-4dab-876d-1058661deb9f
+                    session-id: 3a9ea8c2-681b-4729-ac29-dfa668d3d205 — 
+                    request-id: da4521a8-af1a-4ae8-bd6b-7ca11c3dddff
                 </small>
                 <br/>
                 <small>
-                    <b>Host: </b>yash-Inspiron-14-5440
+                    <b>Host: </b>ob-weaver-main-9c57c1dc-254ae5f9-5f8f989c6f-7rfxx
                 </small>
             </p>
         </div>
@@ -251,12 +251,12 @@
             <p class="footer-text">© 2020 Google Inc (<a href="https://github.com/GoogleCloudPlatform/microservices-demo">Source Code</a>)</p>
             <p class="footer-text">
                 <small>
-                    session-id: ae0b39a2-1b12-467d-97b7-bc483a8d91db — 
-                    request-id: d81ed589-f70c-4dab-876d-1058661deb9f
+                    session-id: 3a9ea8c2-681b-4729-ac29-dfa668d3d205 — 
+                    request-id: da4521a8-af1a-4ae8-bd6b-7ca11c3dddff
                 </small>
                 <br/>
                 <small>
-                    <b>Host: </b>yash-Inspiron-14-5440
+                    <b>Host: </b>ob-weaver-main-9c57c1dc-254ae5f9-5f8f989c6f-7rfxx
                 </small>
             </p>
         </div>

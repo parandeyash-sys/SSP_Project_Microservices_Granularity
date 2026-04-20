@@ -13,9 +13,6 @@ groups:
   - name: cs
     components:
       - github.com/ServiceWeaver/onlineboutique/cartservice/CartService
-  - name: cc
-    components:
-      - github.com/ServiceWeaver/onlineboutique/cartservice/cartCache
   - name: co
     components:
       - github.com/ServiceWeaver/onlineboutique/checkoutservice/CheckoutService

@@ -27,7 +27,6 @@ colocate = [
   # Group 3 — Order / checkout services
   [
     "github.com/ServiceWeaver/onlineboutique/cartservice/T",
-    "github.com/ServiceWeaver/onlineboutique/cartservice/cartCache",
     "github.com/ServiceWeaver/onlineboutique/checkoutservice/T",
     "github.com/ServiceWeaver/onlineboutique/emailservice/T",
     "github.com/ServiceWeaver/onlineboutique/paymentservice/T",

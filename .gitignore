@@ -1,0 +1,3 @@
+monitoring_bin/prometheus/prometheus
+monitoring_bin/prometheus/promtool
+monitoring_bin/node_exporter/node_exporter

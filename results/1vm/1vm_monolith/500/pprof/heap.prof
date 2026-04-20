@@ -44,17 +44,17 @@
                             <form method="POST" class="controls-form" action="/setCurrency" id="currency_form" >
                                 <select name="currency_code" onchange="document.getElementById('currency_form').submit();">
                                         
-                                    <option value="TRY" >TRY</option>
-                                    
-                                    <option value="USD" selected="selected">USD</option>
-                                    
                                     <option value="CAD" >CAD</option>
                                     
-                                    <option value="JPY" >JPY</option>
+                                    <option value="TRY" >TRY</option>
+                                    
+                                    <option value="GBP" >GBP</option>
                                     
                                     <option value="EUR" >EUR</option>
                                     
-                                    <option value="GBP" >GBP</option>
+                                    <option value="USD" selected="selected">USD</option>
+                                    
+                                    <option value="JPY" >JPY</option>
                                     
                                 </select>
                             </form>
@@ -105,7 +105,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Sunglasses</div>
-              <div class="hot-product-card-price">$19.98</div>
+              <div class="hot-product-card-price">$19.99</div>
             </div>
           </div>
           
@@ -116,7 +116,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Tank Top</div>
-              <div class="hot-product-card-price">$18.98</div>
+              <div class="hot-product-card-price">$18.99</div>
             </div>
           </div>
           
@@ -127,7 +127,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Watch</div>
-              <div class="hot-product-card-price">$109.98</div>
+              <div class="hot-product-card-price">$109.99</div>
             </div>
           </div>
           
@@ -138,7 +138,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Loafers</div>
-              <div class="hot-product-card-price">$89.98</div>
+              <div class="hot-product-card-price">$89.99</div>
             </div>
           </div>
           
@@ -149,7 +149,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Hairdryer</div>
-              <div class="hot-product-card-price">$24.98</div>
+              <div class="hot-product-card-price">$24.99</div>
             </div>
           </div>
           
@@ -160,7 +160,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Candle Holder</div>
-              <div class="hot-product-card-price">$18.98</div>
+              <div class="hot-product-card-price">$18.99</div>
             </div>
           </div>
           
@@ -171,7 +171,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Salt &amp; Pepper Shakers</div>
-              <div class="hot-product-card-price">$18.48</div>
+              <div class="hot-product-card-price">$18.49</div>
             </div>
           </div>
           
@@ -182,7 +182,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Bamboo Glass Jar</div>
-              <div class="hot-product-card-price">$5.48</div>
+              <div class="hot-product-card-price">$5.49</div>
             </div>
           </div>
           
@@ -193,7 +193,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Mug</div>
-              <div class="hot-product-card-price">$8.98</div>
+              <div class="hot-product-card-price">$8.99</div>
             </div>
           </div>
           
@@ -212,12 +212,12 @@
             <p class="footer-text">© 2020 Google Inc (<a href="https://github.com/GoogleCloudPlatform/microservices-demo">Source Code</a>)</p>
             <p class="footer-text">
                 <small>
-                    session-id: 5aba8925-d5be-4d7c-9034-21f8e65f47a3 — 
-                    request-id: d573b513-5d32-4b09-93b6-b18a614f975d
+                    session-id: 6709eb8b-05ac-41de-93ac-342ac1ae3914 — 
+                    request-id: 759fe06b-015a-40a4-b615-57f3e47e32a3
                 </small>
                 <br/>
                 <small>
-                    <b>Host: </b>yash-Inspiron-14-5440
+                    <b>Host: </b>ob-weaver-main-cee34850-2d02f901-557fb8c565-7bq25
                 </small>
             </p>
         </div>
@@ -251,12 +251,12 @@
             <p class="footer-text">© 2020 Google Inc (<a href="https://github.com/GoogleCloudPlatform/microservices-demo">Source Code</a>)</p>
             <p class="footer-text">
                 <small>
-                    session-id: 5aba8925-d5be-4d7c-9034-21f8e65f47a3 — 
-                    request-id: d573b513-5d32-4b09-93b6-b18a614f975d
+                    session-id: 6709eb8b-05ac-41de-93ac-342ac1ae3914 — 
+                    request-id: 759fe06b-015a-40a4-b615-57f3e47e32a3
                 </small>
                 <br/>
                 <small>
-                    <b>Host: </b>yash-Inspiron-14-5440
+                    <b>Host: </b>ob-weaver-main-cee34850-2d02f901-557fb8c565-7bq25
                 </small>
             </p>
         </div>

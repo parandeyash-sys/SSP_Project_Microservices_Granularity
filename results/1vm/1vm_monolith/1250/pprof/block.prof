@@ -46,8 +46,6 @@
                                         
                                     <option value="JPY" >JPY</option>
                                     
-                                    <option value="EUR" >EUR</option>
-                                    
                                     <option value="GBP" >GBP</option>
                                     
                                     <option value="TRY" >TRY</option>
@@ -55,6 +53,8 @@
                                     <option value="USD" selected="selected">USD</option>
                                     
                                     <option value="CAD" >CAD</option>
+                                    
+                                    <option value="EUR" >EUR</option>
                                     
                                 </select>
                             </form>
@@ -212,12 +212,12 @@
             <p class="footer-text">© 2020 Google Inc (<a href="https://github.com/GoogleCloudPlatform/microservices-demo">Source Code</a>)</p>
             <p class="footer-text">
                 <small>
-                    session-id: 51bfb43e-6fae-4eb7-b1c2-44fffd42b382 — 
-                    request-id: 23818ed3-9d5b-4dc2-8a5a-ed95134caf3a
+                    session-id: 721057d0-13dc-4a90-8780-907b955ff192 — 
+                    request-id: 0403591b-eb05-4f4e-87b8-d637290075c0
                 </small>
                 <br/>
                 <small>
-                    <b>Host: </b>yash-Inspiron-14-5440
+                    <b>Host: </b>ob-weaver-main-9c57c1dc-254ae5f9-5f8f989c6f-7rfxx
                 </small>
             </p>
         </div>
@@ -251,12 +251,12 @@
             <p class="footer-text">© 2020 Google Inc (<a href="https://github.com/GoogleCloudPlatform/microservices-demo">Source Code</a>)</p>
             <p class="footer-text">
                 <small>
-                    session-id: 51bfb43e-6fae-4eb7-b1c2-44fffd42b382 — 
-                    request-id: 23818ed3-9d5b-4dc2-8a5a-ed95134caf3a
+                    session-id: 721057d0-13dc-4a90-8780-907b955ff192 — 
+                    request-id: 0403591b-eb05-4f4e-87b8-d637290075c0
                 </small>
                 <br/>
                 <small>
-                    <b>Host: </b>yash-Inspiron-14-5440
+                    <b>Host: </b>ob-weaver-main-9c57c1dc-254ae5f9-5f8f989c6f-7rfxx
                 </small>
             </p>
         </div>

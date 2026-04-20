@@ -1,0 +1,17 @@
+{
+	"ulid": "01KPD3TKESBFS14ZAYW53TD176",
+	"minTime": 1776398400980,
+	"maxTime": 1776405600000,
+	"stats": {
+		"numSamples": 2654169,
+		"numSeries": 2045,
+		"numChunks": 22492
+	},
+	"compaction": {
+		"level": 1,
+		"sources": [
+			"01KPD3TKESBFS14ZAYW53TD176"
+		]
+	},
+	"version": 1
+}

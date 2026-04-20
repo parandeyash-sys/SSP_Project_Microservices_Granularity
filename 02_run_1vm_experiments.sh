@@ -147,9 +147,9 @@ for CONFIG in "${CONFIGS[@]}"; do
         SVC_NAME=$(kubectl get svc -l serviceweaver/app=ob -o jsonpath='{.items[0].metadata.name}')
         [ -n "$SVC_NAME" ] || error "Could not find Service Weaver service (label: serviceweaver/app=ob)"
 
-        info "Starting port-forward for service/${SVC_NAME} 8080..."
-        kubectl port-forward "svc/${SVC_NAME}" 8080:8080 > "${RUN_DIR}/port-forward.log" 2>&1 &
-        APP_PID=$!
+        info "Resolving Minikube service URL for ${SVC_NAME}..."
+        HOST=$(minikube service "${SVC_NAME}" --url -p "$MK_PROFILE" | head -n1)
+        [ -n "$HOST" ] || error "Could not get Minikube service URL for ${SVC_NAME}"
         
         wait_for_ready "${HOST}" "$READINESS_TIMEOUT"
         info "Warming up for ${WARMUP_SLEEP}s..."
@@ -163,7 +163,7 @@ for CONFIG in "${CONFIGS[@]}"; do
         # e.g., wait 120s, profile 60s
         (
             sleep 120
-            collect_pprof "localhost:8080" "$PPROF_DIR" 60
+            collect_pprof "${HOST#http://}" "$PPROF_DIR" 60
         ) &
         PPROF_SCHED_PID=$!
 
@@ -203,7 +203,7 @@ for CONFIG in "${CONFIGS[@]}"; do
         fi
 
         # ── Stop app ───────────────────────────────────────────────────────────
-        kill_app "$APP_PID"  # kills port-forward
+        # (port-forward eliminated)
         
         info "Cleaning up K8s deployment..."
         kubectl delete -f "$KUBE_YAML" >/dev/null 2>&1 || true

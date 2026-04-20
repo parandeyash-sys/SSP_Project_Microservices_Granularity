@@ -44,17 +44,17 @@
                             <form method="POST" class="controls-form" action="/setCurrency" id="currency_form" >
                                 <select name="currency_code" onchange="document.getElementById('currency_form').submit();">
                                         
-                                    <option value="TRY" >TRY</option>
+                                    <option value="JPY" >JPY</option>
                                     
                                     <option value="USD" selected="selected">USD</option>
                                     
                                     <option value="CAD" >CAD</option>
                                     
-                                    <option value="JPY" >JPY</option>
+                                    <option value="GBP" >GBP</option>
                                     
                                     <option value="EUR" >EUR</option>
                                     
-                                    <option value="GBP" >GBP</option>
+                                    <option value="TRY" >TRY</option>
                                     
                                 </select>
                             </form>
@@ -105,7 +105,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Sunglasses</div>
-              <div class="hot-product-card-price">$19.98</div>
+              <div class="hot-product-card-price">$19.99</div>
             </div>
           </div>
           
@@ -116,7 +116,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Tank Top</div>
-              <div class="hot-product-card-price">$18.98</div>
+              <div class="hot-product-card-price">$18.99</div>
             </div>
           </div>
           
@@ -127,7 +127,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Watch</div>
-              <div class="hot-product-card-price">$109.98</div>
+              <div class="hot-product-card-price">$109.99</div>
             </div>
           </div>
           
@@ -138,7 +138,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Loafers</div>
-              <div class="hot-product-card-price">$89.98</div>
+              <div class="hot-product-card-price">$89.99</div>
             </div>
           </div>
           
@@ -149,7 +149,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Hairdryer</div>
-              <div class="hot-product-card-price">$24.98</div>
+              <div class="hot-product-card-price">$24.99</div>
             </div>
           </div>
           
@@ -160,7 +160,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Candle Holder</div>
-              <div class="hot-product-card-price">$18.98</div>
+              <div class="hot-product-card-price">$18.99</div>
             </div>
           </div>
           
@@ -171,7 +171,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Salt &amp; Pepper Shakers</div>
-              <div class="hot-product-card-price">$18.48</div>
+              <div class="hot-product-card-price">$18.49</div>
             </div>
           </div>
           
@@ -182,7 +182,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Bamboo Glass Jar</div>
-              <div class="hot-product-card-price">$5.48</div>
+              <div class="hot-product-card-price">$5.49</div>
             </div>
           </div>
           
@@ -193,7 +193,7 @@
             </a>
             <div>
               <div class="hot-product-card-name">Mug</div>
-              <div class="hot-product-card-price">$8.98</div>
+              <div class="hot-product-card-price">$8.99</div>
             </div>
           </div>
           
@@ -212,12 +212,12 @@
             <p class="footer-text">© 2020 Google Inc (<a href="https://github.com/GoogleCloudPlatform/microservices-demo">Source Code</a>)</p>
             <p class="footer-text">
                 <small>
-                    session-id: 0beb7110-ed46-4bf7-95ad-9d161bc0e198 — 
-                    request-id: 44df0d00-140c-4fc0-90f9-cf4201cbb5fc
+                    session-id: 84c05f3e-bff2-4806-ad74-ae71459a0e93 — 
+                    request-id: b199cc9d-1db2-4d4f-ad0b-e7b01df4ee23
                 </small>
                 <br/>
                 <small>
-                    <b>Host: </b>yash-Inspiron-14-5440
+                    <b>Host: </b>ob-weaver-main-031a7d4a-96a3e40e-5587698ff5-r7k28
                 </small>
             </p>
         </div>
@@ -251,12 +251,12 @@
             <p class="footer-text">© 2020 Google Inc (<a href="https://github.com/GoogleCloudPlatform/microservices-demo">Source Code</a>)</p>
             <p class="footer-text">
                 <small>
-                    session-id: 0beb7110-ed46-4bf7-95ad-9d161bc0e198 — 
-                    request-id: 44df0d00-140c-4fc0-90f9-cf4201cbb5fc
+                    session-id: 84c05f3e-bff2-4806-ad74-ae71459a0e93 — 
+                    request-id: b199cc9d-1db2-4d4f-ad0b-e7b01df4ee23
                 </small>
                 <br/>
                 <small>
-                    <b>Host: </b>yash-Inspiron-14-5440
+                    <b>Host: </b>ob-weaver-main-031a7d4a-96a3e40e-5587698ff5-r7k28
                 </small>
             </p>
         </div>
