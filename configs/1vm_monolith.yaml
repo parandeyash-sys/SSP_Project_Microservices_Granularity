@@ -6,7 +6,7 @@ listeners:
 groups:
   - name: monolith
     components:
-      - github.com/ServiceWeaver/onlineboutique/frontend/weaver.Main
+      - github.com/ServiceWeaver/weaver/Main
       - github.com/ServiceWeaver/onlineboutique/adservice/AdService
       - github.com/ServiceWeaver/onlineboutique/cartservice/CartService
       - github.com/ServiceWeaver/onlineboutique/checkoutservice/CheckoutService

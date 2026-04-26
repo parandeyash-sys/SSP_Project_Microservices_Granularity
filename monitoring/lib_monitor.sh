@@ -38,16 +38,15 @@ setup_minikube_nodes() {
     local profile="${MK_PROFILE:-minikube}"
     for node in "$@"; do
         _minfo "Checking sysstat on node: ${node} (Profile: ${profile})..."
-        if minikube -p "$profile" ssh -n "$node" "command -v sar" >/dev/null 2>&1; then
+        if minikube -p "$profile" ssh -n "$node" "command -v sar" </dev/null >/dev/null 2>&1; then
             _minfo "  sysstat already installed on ${node}"
         else
             _minfo "  Installing sysstat on ${node} (minikube ssh)..."
-            minikube -p "$profile" ssh -n "$node" "sudo apt-get update -qq && sudo apt-get install -y -qq sysstat" || _mwarn "  Failed to install sysstat on ${node}"
+            # Try apk first (Alpine), then apt-get (Debian), then microdnf/dnf (RHEL)
+            minikube -p "$profile" ssh -n "$node" "apk add --no-cache sysstat 2>/dev/null || sudo apt-get update -qq && sudo apt-get install -y -qq sysstat 2>/dev/null || microdnf install -y sysstat 2>/dev/null" </dev/null || _mwarn "  Failed to install sysstat on ${node}"
         fi
     done
 }
-
-# ── System metrics start/stop (Remote via Minikube) ───────────────────────────
 # Usage: start_k8s_monitoring <sysmet_dir> <node_name>
 start_k8s_monitoring() {
     local dir="$1"
@@ -59,25 +58,25 @@ start_k8s_monitoring() {
     # and redirect output back to the host.
     
     # ── CPU per-core (mpstat 1) ───────────────────────────────────────────────
-    minikube -p "$profile" ssh -n "$node" "mpstat -P ALL 1" > "${dir}/mpstat_cpu_${node}.log" 2>&1 &
+    minikube -p "$profile" ssh -n "$node" "mpstat -P ALL 1" </dev/null > "${dir}/mpstat_cpu_${node}.log" 2>&1 &
     _MONITOR_PIDS+=($!)
 
     # ── Overall CPU + load (sar -u 1) ────────────────────────────────────────
-    minikube -p "$profile" ssh -n "$node" "sar -u 1" > "${dir}/sar_cpu_${node}.log" 2>&1 &
+    minikube -p "$profile" ssh -n "$node" "sar -u 1" </dev/null > "${dir}/sar_cpu_${node}.log" 2>&1 &
     _MONITOR_PIDS+=($!)
 
-    minikube -p "$profile" ssh -n "$node" "sar -r 1" > "${dir}/sar_memory_${node}.log" 2>&1 &
+    minikube -p "$profile" ssh -n "$node" "sar -r 1" </dev/null > "${dir}/sar_memory_${node}.log" 2>&1 &
     _MONITOR_PIDS+=($!)
 
-    minikube -p "$profile" ssh -n "$node" "sar -n DEV 1" > "${dir}/sar_network_${node}.log" 2>&1 &
+    minikube -p "$profile" ssh -n "$node" "sar -n DEV 1" </dev/null > "${dir}/sar_network_${node}.log" 2>&1 &
     _MONITOR_PIDS+=($!)
 
     # ── Disk I/O (iostat -x 1) ────────────────────────────────────────────────
-    minikube -p "$profile" ssh -n "$node" "iostat -x -t 1" > "${dir}/iostat_disk_${node}.log" 2>&1 &
+    minikube -p "$profile" ssh -n "$node" "iostat -x -t 1" </dev/null > "${dir}/iostat_disk_${node}.log" 2>&1 &
     _MONITOR_PIDS+=($!)
 
     # ── Memory + swap (vmstat 1) ──────────────────────────────────────────────
-    minikube -p "$profile" ssh -n "$node" "vmstat 1" > "${dir}/vmstat_${node}.log" 2>&1 &
+    minikube -p "$profile" ssh -n "$node" "vmstat 1" </dev/null > "${dir}/vmstat_${node}.log" 2>&1 &
     _MONITOR_PIDS+=($!)
 
     _minfo "  Monitoring PIDs for ${node}: ${_MONITOR_PIDS[*]: -6}"

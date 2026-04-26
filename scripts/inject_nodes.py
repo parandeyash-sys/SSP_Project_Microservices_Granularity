@@ -20,29 +20,34 @@ node2_name = sys.argv[6] if len(sys.argv) > 6 else "minikube-m02"
 with open(input_yaml, 'r') as f:
     docs = list(yaml.load_all(f, Loader=yaml.FullLoader))
 
+# Filter out None documents and process
+processed_docs = []
 for doc in docs:
-    if not doc or doc.get('kind') != 'Deployment':
+    if not doc:
         continue
     
-    name = doc.get('metadata', {}).get('name', '')
-    target_node = None
-    
-    for g in node1_groups:
-        if g in name:
-            target_node = node1_name
-            break
-    
-    if not target_node:
-        for g in node2_groups:
-            if g in name:
-                target_node = node2_name
+    if doc.get('kind') == 'Deployment':
+        name = doc.get('metadata', {}).get('name', '')
+        target_node = None
+        
+        for g in node1_groups:
+            if name.startswith(f"ob-{g}-"):
+                target_node = node1_name
                 break
+        
+        if not target_node:
+            for g in node2_groups:
+                if name.startswith(f"ob-{g}-"):
+                    target_node = node2_name
+                    break
+        
+        if target_node:
+            spec = doc.setdefault('spec', {})
+            template = spec.setdefault('template', {})
+            template_spec = template.setdefault('spec', {})
+            template_spec['nodeSelector'] = {'kubernetes.io/hostname': target_node}
     
-    if target_node:
-        spec = doc.setdefault('spec', {})
-        template = spec.setdefault('template', {})
-        template_spec = template.setdefault('spec', {})
-        template_spec['nodeSelector'] = {'kubernetes.io/hostname': target_node}
+    processed_docs.append(doc)
 
 with open(output_yaml, 'w') as f:
-    yaml.dump_all(docs, f)
+    yaml.dump_all(processed_docs, f, default_flow_style=False, sort_keys=False)

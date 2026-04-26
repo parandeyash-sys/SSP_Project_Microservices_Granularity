@@ -168,10 +168,21 @@ for CONFIG in "${CONFIGS[@]}"; do
         PPROF_SCHED_PID=$!
 
         # ── Run Locust ─────────────────────────────────────────────────────────
-        info "Running Locust..."
+        info "Running Distributed Locust..."
+        NUM_WORKERS=$(nproc 2>/dev/null || echo 4)
+        info "Starting ${NUM_WORKERS} locust worker processes to avoid CPU bottlenecks..."
+
+        WORKER_PIDS=()
+        for i in $(seq 1 $NUM_WORKERS); do
+            locust -f locustfile.py --worker > "${LOCUST_DIR}/worker_${i}.log" 2>&1 &
+            WORKER_PIDS+=($!)
+        done
+
         locust \
             -f locustfile.py \
             --headless \
+            --master \
+            --expect-workers "$NUM_WORKERS" \
             --host "$HOST" \
             -u "$VUS" \
             -r "$SPAWN_RATE" \
@@ -182,6 +193,12 @@ for CONFIG in "${CONFIGS[@]}"; do
             2>&1 | tee "${LOCUST_DIR}/locust.log"
 
         STATUS=$?
+        
+        # Cleanup worker processes after master exits
+        for pid in "${WORKER_PIDS[@]}"; do
+            kill "$pid" 2>/dev/null || true
+        done
+        wait "${WORKER_PIDS[@]}" 2>/dev/null || true
         
         wait $PPROF_SCHED_PID 2>/dev/null || true
 

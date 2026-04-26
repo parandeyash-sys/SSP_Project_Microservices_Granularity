@@ -21,7 +21,7 @@ APP_PORT=8080
 SPAWN_DIVISOR=30
 RUN_TIME="300s"
 WARMUP_SLEEP=15
-READINESS_TIMEOUT=120
+READINESS_TIMEOUT=600
 
 WORKLOADS=(500 750 1000 1250 1500 1750 2000)
 
@@ -45,9 +45,13 @@ timestamp() { date '+%Y-%m-%d %H:%M:%S'; }
 wait_for_ready() {
     local url="$1" timeout="$2" elapsed=0
     info "Waiting for ${url} (timeout: ${timeout}s)..."
-    while ! curl -sf "${url}" > /dev/null 2>&1; do
-        sleep 2; elapsed=$((elapsed + 2))
-        [ "$elapsed" -ge "$timeout" ] && error "App not ready within ${timeout}s"
+    while ! curl -s --max-time 1 "${url}" > /dev/null 2>&1; do
+        sleep 3; elapsed=$((elapsed + 3))
+        [ "$elapsed" -ge "$timeout" ] && {
+            warn "App not responding at ${url} after ${elapsed}s. Pod status:"
+            kubectl get pods -o wide 2>&1 | head -20
+            error "App did not become ready within ${timeout}s"
+        }
     done
     info "App is ready (${elapsed}s)"
 }
@@ -72,13 +76,14 @@ mkdir -p "$RESULTS_DIR"
 source "monitoring/lib_monitor.sh"
 
 info "Checking Minikube status (Profile: ${MK_PROFILE})..."
-if ! minikube start -p "$MK_PROFILE" --nodes 2 --driver=virtualbox --memory=4096 --cpus=2; then
+if ! minikube start -p "$MK_PROFILE" --driver=virtualbox --nodes=2; then
     error "Minikube failed to start with profile ${MK_PROFILE}. Try: minikube delete -p ${MK_PROFILE}"
 fi
 
 # Point kubectl and docker to the new profile
 minikube -p "$MK_PROFILE" profile "$MK_PROFILE"
-eval $(minikube -p "$MK_PROFILE" docker-env)
+# Note: docker-env is incompatible with multi-node clusters
+# eval $(minikube -p "$MK_PROFILE" docker-env)
 
 # Clean up any residual deployments from previous runs/app names
 info "Cleaning up old deployments..."
@@ -102,21 +107,21 @@ for CONFIG in "${CONFIGS[@]}"; do
     # Define node mapping based on config
     case "$CONFIG" in
         "2vm_frontend_colocated")
-            NODE1="fe"
+            NODE1="fe,weaver-main"
             NODE2="be"
             ;;
         "2vm_frontend_distributed")
-            NODE1="fe"
+            NODE1="fe,weaver-main"
             # Distributed components in their own short-named groups
-            NODE2="ad,cs,cc,co,cu,em,pa,pc,rc,sh"
+            NODE2="ad,cs,co,cu,em,pa,pc,rc,sh"
             ;;
         "2vm_colocated_colocated")
-            NODE1="g1"
+            NODE1="g1,weaver-main"
             NODE2="g2"
             ;;
         "2vm_distributed_distributed")
-            NODE1="fe,ad,cs,cc,co"
-            NODE2="cu,em,pa,pc,rc,sh"
+            NODE1="fe,em,pa,rc,sh,weaver-main"
+            NODE2="ad,cs,co,cu,pc"
             ;;
     esac
 
@@ -135,6 +140,18 @@ for CONFIG in "${CONFIGS[@]}"; do
         RAW_KUBE_YAML=$(weaver-kube deploy "$YAML_CONFIG" | tail -n 1)
         [ -f "$RAW_KUBE_YAML" ] || error "weaver-kube deploy failed"
 
+        # For multi-node Minikube, change imagePullPolicy to Never to use local images
+        info "Setting imagePullPolicy to Never for all nodes..."
+        sed -i 's/imagePullPolicy: IfNotPresent/imagePullPolicy: Never/g' "$RAW_KUBE_YAML"
+
+        # Extract image name and load it on all nodes using minikube image load
+        IMAGE_NAME=$(grep "image: ob:" "$RAW_KUBE_YAML" | head -1 | sed 's/.*image: \(ob:[^ ]*\).*/\1/')
+        if [ -n "$IMAGE_NAME" ]; then
+            info "Loading Docker image ${IMAGE_NAME} onto all Minikube nodes..."
+            minikube -p "$MK_PROFILE" image load "$IMAGE_NAME" || warn "Failed to load image ${IMAGE_NAME}"
+            info "Image ${IMAGE_NAME} is now available on all nodes"
+        fi
+
         INJECTED_YAML="${RUN_DIR}/weaver_kube_injected.yaml"
         info "Injecting nodeAffinity (Node1=${NODE1}, Node2=${NODE2})..."
         python3 scripts/inject_nodes.py "$RAW_KUBE_YAML" "$INJECTED_YAML" "$NODE1" "$NODE2" "$MK_PROFILE" "${MK_PROFILE}-m02"
@@ -143,7 +160,10 @@ for CONFIG in "${CONFIGS[@]}"; do
         kubectl apply -f "$INJECTED_YAML" | tee "${RUN_DIR}/kubectl_apply.log"
 
         info "Waiting for all pods to be Ready..."
-        kubectl wait --for=condition=Ready pods --all --timeout=300s || warn "Some pods not ready!"
+        if ! kubectl wait --for=condition=Ready pods --all --timeout=300s; then
+            warn "Some pods not ready! Checking status..."
+            kubectl get pods -o wide
+        fi
 
         # Find the service name (Service Weaver adds a deployment ID hash)
         SVC_NAME=$(kubectl get svc -l serviceweaver/app=ob -o jsonpath='{.items[0].metadata.name}')
@@ -168,10 +188,21 @@ for CONFIG in "${CONFIGS[@]}"; do
         ) &
         PPROF_SCHED_PID=$!
 
-        info "Running Locust..."
+        info "Running Distributed Locust..."
+        NUM_WORKERS=$(nproc 2>/dev/null || echo 4)
+        info "Starting ${NUM_WORKERS} locust worker processes to avoid CPU bottlenecks..."
+
+        WORKER_PIDS=()
+        for i in $(seq 1 $NUM_WORKERS); do
+            locust -f locustfile.py --worker > "${LOCUST_DIR}/worker_${i}.log" 2>&1 &
+            WORKER_PIDS+=($!)
+        done
+
         locust \
             -f locustfile.py \
             --headless \
+            --master \
+            --expect-workers "$NUM_WORKERS" \
             --host "$HOST" \
             -u "$VUS" \
             -r "$SPAWN_RATE" \
@@ -182,6 +213,12 @@ for CONFIG in "${CONFIGS[@]}"; do
             2>&1 | tee "${LOCUST_DIR}/locust.log"
 
         STATUS=$?
+        
+        # Cleanup worker processes after master exits
+        for pid in "${WORKER_PIDS[@]}"; do
+            kill "$pid" 2>/dev/null || true
+        done
+        wait "${WORKER_PIDS[@]}" 2>/dev/null || true
         wait $PPROF_SCHED_PID 2>/dev/null || true
 
         # ── Stop System Monitoring ─────────────────────────────────────────────

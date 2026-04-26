@@ -264,3 +264,235 @@
 [2026-04-20 15:23:07] [1VM] Config=1vm_monolith VUs=500 START
 [2026-04-20 15:28:33] [1VM] Config=1vm_monolith VUs=500 SUCCESS
 [2026-04-20 15:28:38] [1VM] Config=1vm_monolith VUs=750 START
+[2026-04-20 15:57:31] [2VM] ======== Starting 2-VM experiment suite ========
+[2026-04-20 15:57:31] [2VM] Config=2vm_frontend_colocated START
+[2026-04-20 15:57:31] [2VM] Config=2vm_frontend_colocated VUs=500 START
+[2026-04-20 16:06:50] [2VM] ======== Starting 2-VM experiment suite ========
+[2026-04-20 16:06:50] [2VM] Config=2vm_frontend_colocated START
+[2026-04-20 16:06:50] [2VM] Config=2vm_frontend_colocated VUs=500 START
+[2026-04-20 16:14:39] [2VM] ======== Starting 2-VM experiment suite ========
+[2026-04-20 16:14:39] [2VM] Config=2vm_frontend_colocated START
+[2026-04-20 16:14:39] [2VM] Config=2vm_frontend_colocated VUs=500 START
+[2026-04-20 16:22:45] [2VM] ======== Starting 2-VM experiment suite ========
+[2026-04-20 16:22:45] [2VM] Config=2vm_frontend_colocated START
+[2026-04-20 16:22:45] [2VM] Config=2vm_frontend_colocated VUs=500 START
+[2026-04-20 16:28:30] [2VM] Config=2vm_frontend_colocated VUs=500 SUCCESS
+[2026-04-20 16:28:40] [2VM] Config=2vm_frontend_colocated VUs=750 START
+[2026-04-20 16:37:40] [2VM] ======== Starting 2-VM experiment suite ========
+[2026-04-20 16:37:40] [2VM] Config=2vm_frontend_colocated START
+[2026-04-20 16:37:40] [2VM] Config=2vm_frontend_colocated VUs=500 START
+[2026-04-20 16:43:20] [2VM] Config=2vm_frontend_colocated VUs=500 SUCCESS
+[2026-04-20 16:43:31] [2VM] Config=2vm_frontend_colocated VUs=750 START
+[2026-04-20 16:49:28] [2VM] Config=2vm_frontend_colocated VUs=750 SUCCESS
+[2026-04-20 16:49:38] [2VM] Config=2vm_frontend_colocated VUs=1000 START
+[2026-04-20 16:59:25] [2VM] ======== Starting 2-VM experiment suite ========
+[2026-04-20 16:59:25] [2VM] Config=2vm_frontend_colocated START
+[2026-04-20 16:59:25] [2VM] Config=2vm_frontend_colocated VUs=500 START
+[2026-04-20 17:03:45] [2VM] ======== Starting 2-VM experiment suite ========
+[2026-04-20 17:03:45] [2VM] Config=2vm_frontend_colocated START
+[2026-04-20 17:03:45] [2VM] Config=2vm_frontend_colocated VUs=500 START
+[2026-04-20 17:09:25] [2VM] Config=2vm_frontend_colocated VUs=500 SUCCESS
+[2026-04-20 17:09:35] [2VM] Config=2vm_frontend_colocated VUs=750 START
+[2026-04-20 17:15:07] [2VM] Config=2vm_frontend_colocated VUs=750 SUCCESS
+[2026-04-20 17:15:18] [2VM] Config=2vm_frontend_colocated VUs=1000 START
+[2026-04-20 17:21:12] [2VM] Config=2vm_frontend_colocated VUs=1000 SUCCESS
+[2026-04-20 17:21:22] [2VM] Config=2vm_frontend_colocated VUs=1250 START
+[2026-04-20 17:27:22] [2VM] Config=2vm_frontend_colocated VUs=1250 SUCCESS
+[2026-04-20 17:27:32] [2VM] Config=2vm_frontend_colocated VUs=1500 START
+[2026-04-20 17:33:26] [2VM] Config=2vm_frontend_colocated VUs=1500 SUCCESS
+[2026-04-20 17:33:37] [2VM] Config=2vm_frontend_colocated VUs=1750 START
+[2026-04-20 17:39:20] [2VM] Config=2vm_frontend_colocated VUs=1750 SUCCESS
+[2026-04-20 17:39:31] [2VM] Config=2vm_frontend_colocated VUs=2000 START
+[2026-04-20 17:45:12] [2VM] Config=2vm_frontend_colocated VUs=2000 SUCCESS
+[2026-04-20 17:45:22] [2VM] Config=2vm_frontend_colocated DONE
+[2026-04-20 17:45:22] [2VM] Config=2vm_frontend_distributed START
+[2026-04-20 17:45:22] [2VM] Config=2vm_frontend_distributed VUs=500 START
+[2026-04-20 18:11:24] [2VM] ======== Starting 2-VM experiment suite ========
+[2026-04-20 18:11:24] [2VM] Config=2vm_frontend_colocated START
+[2026-04-20 18:11:24] [2VM] Config=2vm_frontend_colocated VUs=500 START
+[2026-04-20 18:17:17] [2VM] Config=2vm_frontend_colocated VUs=500 SUCCESS
+[2026-04-20 18:17:27] [2VM] Config=2vm_frontend_colocated VUs=750 START
+[2026-04-20 18:22:58] [2VM] Config=2vm_frontend_colocated VUs=750 SUCCESS
+[2026-04-20 18:23:08] [2VM] Config=2vm_frontend_colocated VUs=1000 START
+[2026-04-20 18:28:48] [2VM] Config=2vm_frontend_colocated VUs=1000 SUCCESS
+[2026-04-20 18:28:58] [2VM] Config=2vm_frontend_colocated VUs=1250 START
+[2026-04-20 18:34:39] [2VM] Config=2vm_frontend_colocated VUs=1250 SUCCESS
+[2026-04-20 18:34:49] [2VM] Config=2vm_frontend_colocated VUs=1500 START
+[2026-04-20 18:40:28] [2VM] Config=2vm_frontend_colocated VUs=1500 SUCCESS
+[2026-04-20 18:40:38] [2VM] Config=2vm_frontend_colocated VUs=1750 START
+[2026-04-20 18:46:19] [2VM] Config=2vm_frontend_colocated VUs=1750 SUCCESS
+[2026-04-20 18:46:29] [2VM] Config=2vm_frontend_colocated VUs=2000 START
+[2026-04-20 19:07:28] [2VM] ======== Starting 2-VM experiment suite ========
+[2026-04-20 19:28:09] [2VM] ======== Starting 2-VM experiment suite ========
+[2026-04-20 19:34:34] [2VM] ======== Starting 2-VM experiment suite ========
+[2026-04-20 19:34:34] [2VM] Config=2vm_frontend_distributed START
+[2026-04-20 19:34:34] [2VM] Config=2vm_frontend_distributed VUs=500 START
+[2026-04-20 19:50:03] [2VM] ======== Starting 2-VM experiment suite ========
+[2026-04-20 19:50:03] [2VM] Config=2vm_frontend_distributed START
+[2026-04-20 19:50:03] [2VM] Config=2vm_frontend_distributed VUs=500 START
+[2026-04-20 20:05:07] [2VM] ======== Starting 2-VM experiment suite ========
+[2026-04-20 20:05:07] [2VM] Config=2vm_frontend_distributed START
+[2026-04-20 20:05:07] [2VM] Config=2vm_frontend_distributed VUs=500 START
+[2026-04-20 20:11:16] [2VM] Config=2vm_frontend_distributed VUs=500 SUCCESS
+[2026-04-20 20:11:30] [2VM] Config=2vm_frontend_distributed VUs=750 START
+[2026-04-20 20:17:16] [2VM] Config=2vm_frontend_distributed VUs=750 SUCCESS
+[2026-04-20 20:17:31] [2VM] Config=2vm_frontend_distributed VUs=1000 START
+[2026-04-20 20:23:31] [2VM] Config=2vm_frontend_distributed VUs=1000 SUCCESS
+[2026-04-20 20:23:45] [2VM] Config=2vm_frontend_distributed VUs=1250 START
+[2026-04-20 20:29:47] [2VM] Config=2vm_frontend_distributed VUs=1250 SUCCESS
+[2026-04-20 20:30:01] [2VM] Config=2vm_frontend_distributed VUs=1500 START
+[2026-04-20 20:36:02] [2VM] Config=2vm_frontend_distributed VUs=1500 SUCCESS
+[2026-04-20 20:36:17] [2VM] Config=2vm_frontend_distributed VUs=1750 START
+[2026-04-20 20:42:19] [2VM] Config=2vm_frontend_distributed VUs=1750 SUCCESS
+[2026-04-20 20:42:34] [2VM] Config=2vm_frontend_distributed VUs=2000 START
+[2026-04-20 20:48:45] [2VM] Config=2vm_frontend_distributed VUs=2000 SUCCESS
+[2026-04-20 20:48:59] [2VM] Config=2vm_frontend_distributed DONE
+[2026-04-20 20:48:59] [2VM] Config=2vm_colocated_colocated START
+[2026-04-20 20:48:59] [2VM] Config=2vm_colocated_colocated VUs=500 START
+[2026-04-20 20:54:57] [2VM] Config=2vm_colocated_colocated VUs=500 SUCCESS
+[2026-04-20 20:55:08] [2VM] Config=2vm_colocated_colocated VUs=750 START
+[2026-04-20 21:01:03] [2VM] Config=2vm_colocated_colocated VUs=750 SUCCESS
+[2026-04-20 21:01:13] [2VM] Config=2vm_colocated_colocated VUs=1000 START
+[2026-04-20 21:07:10] [2VM] Config=2vm_colocated_colocated VUs=1000 SUCCESS
+[2026-04-20 21:07:21] [2VM] Config=2vm_colocated_colocated VUs=1250 START
+[2026-04-20 21:13:17] [2VM] Config=2vm_colocated_colocated VUs=1250 SUCCESS
+[2026-04-20 21:13:28] [2VM] Config=2vm_colocated_colocated VUs=1500 START
+[2026-04-20 21:19:26] [2VM] Config=2vm_colocated_colocated VUs=1500 SUCCESS
+[2026-04-20 21:19:36] [2VM] Config=2vm_colocated_colocated VUs=1750 START
+[2026-04-20 21:25:31] [2VM] Config=2vm_colocated_colocated VUs=1750 SUCCESS
+[2026-04-20 21:25:42] [2VM] Config=2vm_colocated_colocated VUs=2000 START
+[2026-04-20 21:31:46] [2VM] Config=2vm_colocated_colocated VUs=2000 SUCCESS
+[2026-04-20 21:31:56] [2VM] Config=2vm_colocated_colocated DONE
+[2026-04-20 21:31:56] [2VM] Config=2vm_distributed_distributed START
+[2026-04-20 21:31:56] [2VM] Config=2vm_distributed_distributed VUs=500 START
+[2026-04-20 21:37:58] [2VM] Config=2vm_distributed_distributed VUs=500 SUCCESS
+[2026-04-20 21:38:13] [2VM] Config=2vm_distributed_distributed VUs=750 START
+[2026-04-20 21:44:16] [2VM] Config=2vm_distributed_distributed VUs=750 SUCCESS
+[2026-04-20 21:44:30] [2VM] Config=2vm_distributed_distributed VUs=1000 START
+[2026-04-20 21:50:34] [2VM] Config=2vm_distributed_distributed VUs=1000 SUCCESS
+[2026-04-20 21:50:49] [2VM] Config=2vm_distributed_distributed VUs=1250 START
+[2026-04-20 21:56:48] [2VM] Config=2vm_distributed_distributed VUs=1250 SUCCESS
+[2026-04-20 21:57:03] [2VM] Config=2vm_distributed_distributed VUs=1500 START
+[2026-04-20 22:03:04] [2VM] Config=2vm_distributed_distributed VUs=1500 SUCCESS
+[2026-04-20 22:03:18] [2VM] Config=2vm_distributed_distributed VUs=1750 START
+[2026-04-20 22:08:56] [2VM] Config=2vm_distributed_distributed VUs=1750 SUCCESS
+[2026-04-20 22:09:09] [2VM] Config=2vm_distributed_distributed VUs=2000 START
+[2026-04-20 22:14:44] [2VM] Config=2vm_distributed_distributed VUs=2000 SUCCESS
+[2026-04-20 22:14:57] [2VM] Config=2vm_distributed_distributed DONE
+[2026-04-20 22:14:57] [2VM] ======== All 2-VM experiments complete ========
+[2026-04-20 22:53:17] [2VM] ======== Starting 2-VM experiment suite ========
+[2026-04-20 22:53:17] [2VM] Config=2vm_frontend_distributed START
+[2026-04-20 22:53:17] [2VM] Config=2vm_frontend_distributed VUs=500 START
+[2026-04-20 22:58:55] [2VM] Config=2vm_frontend_distributed VUs=500 SUCCESS
+[2026-04-20 22:59:08] [2VM] Config=2vm_frontend_distributed VUs=750 START
+[2026-04-20 23:04:48] [2VM] Config=2vm_frontend_distributed VUs=750 SUCCESS
+[2026-04-20 23:05:01] [2VM] Config=2vm_frontend_distributed VUs=1000 START
+[2026-04-20 23:10:59] [2VM] Config=2vm_frontend_distributed VUs=1000 SUCCESS
+[2026-04-20 23:11:12] [2VM] Config=2vm_frontend_distributed VUs=1250 START
+[2026-04-20 23:16:48] [2VM] Config=2vm_frontend_distributed VUs=1250 SUCCESS
+[2026-04-20 23:17:01] [2VM] Config=2vm_frontend_distributed VUs=1500 START
+[2026-04-20 23:22:45] [2VM] Config=2vm_frontend_distributed VUs=1500 SUCCESS
+[2026-04-20 23:22:58] [2VM] Config=2vm_frontend_distributed VUs=1750 START
+[2026-04-20 23:28:32] [2VM] Config=2vm_frontend_distributed VUs=1750 SUCCESS
+[2026-04-20 23:28:45] [2VM] Config=2vm_frontend_distributed VUs=2000 START
+[2026-04-20 23:34:20] [2VM] Config=2vm_frontend_distributed VUs=2000 SUCCESS
+[2026-04-20 23:34:33] [2VM] Config=2vm_frontend_distributed DONE
+[2026-04-20 23:34:33] [2VM] Config=2vm_colocated_colocated START
+[2026-04-20 23:34:33] [2VM] Config=2vm_colocated_colocated VUs=500 START
+[2026-04-20 23:40:09] [2VM] Config=2vm_colocated_colocated VUs=500 SUCCESS
+[2026-04-20 23:40:19] [2VM] Config=2vm_colocated_colocated VUs=750 START
+[2026-04-20 23:45:52] [2VM] Config=2vm_colocated_colocated VUs=750 SUCCESS
+[2026-04-20 23:46:02] [2VM] Config=2vm_colocated_colocated VUs=1000 START
+[2026-04-20 23:51:35] [2VM] Config=2vm_colocated_colocated VUs=1000 SUCCESS
+[2026-04-20 23:51:46] [2VM] Config=2vm_colocated_colocated VUs=1250 START
+[2026-04-20 23:57:19] [2VM] Config=2vm_colocated_colocated VUs=1250 SUCCESS
+[2026-04-20 23:57:30] [2VM] Config=2vm_colocated_colocated VUs=1500 START
+[2026-04-21 00:03:07] [2VM] Config=2vm_colocated_colocated VUs=1500 SUCCESS
+[2026-04-21 00:03:18] [2VM] Config=2vm_colocated_colocated VUs=1750 START
+[2026-04-21 00:09:12] [2VM] Config=2vm_colocated_colocated VUs=1750 SUCCESS
+[2026-04-21 00:09:22] [2VM] Config=2vm_colocated_colocated VUs=2000 START
+[2026-04-21 00:15:15] [2VM] Config=2vm_colocated_colocated VUs=2000 SUCCESS
+[2026-04-21 00:15:26] [2VM] Config=2vm_colocated_colocated DONE
+[2026-04-21 00:15:26] [2VM] Config=2vm_distributed_distributed START
+[2026-04-21 00:15:26] [2VM] Config=2vm_distributed_distributed VUs=500 START
+[2026-04-21 00:21:26] [2VM] Config=2vm_distributed_distributed VUs=500 SUCCESS
+[2026-04-21 00:21:41] [2VM] Config=2vm_distributed_distributed VUs=750 START
+[2026-04-21 00:27:39] [2VM] Config=2vm_distributed_distributed VUs=750 SUCCESS
+[2026-04-21 00:27:54] [2VM] Config=2vm_distributed_distributed VUs=1000 START
+[2026-04-21 00:33:53] [2VM] Config=2vm_distributed_distributed VUs=1000 SUCCESS
+[2026-04-21 00:34:08] [2VM] Config=2vm_distributed_distributed VUs=1250 START
+[2026-04-21 00:40:12] [2VM] Config=2vm_distributed_distributed VUs=1250 SUCCESS
+[2026-04-21 00:40:26] [2VM] Config=2vm_distributed_distributed VUs=1500 START
+[2026-04-21 00:46:29] [2VM] Config=2vm_distributed_distributed VUs=1500 SUCCESS
+[2026-04-21 00:46:44] [2VM] Config=2vm_distributed_distributed VUs=1750 START
+[2026-04-21 00:52:45] [2VM] Config=2vm_distributed_distributed VUs=1750 SUCCESS
+[2026-04-21 00:52:59] [2VM] Config=2vm_distributed_distributed VUs=2000 START
+[2026-04-21 00:58:55] [2VM] Config=2vm_distributed_distributed VUs=2000 SUCCESS
+[2026-04-21 00:59:09] [2VM] Config=2vm_distributed_distributed DONE
+[2026-04-21 00:59:09] [2VM] ======== All 2-VM experiments complete ========
+[2026-04-21 14:48:06] [2VM] ======== Starting 2-VM experiment suite ========
+[2026-04-21 14:48:06] [2VM] Config=2vm_frontend_colocated START
+[2026-04-21 14:48:06] [2VM] Config=2vm_frontend_colocated VUs=500 START
+[2026-04-21 14:54:08] [2VM] Config=2vm_frontend_colocated VUs=500 SUCCESS
+[2026-04-21 14:54:18] [2VM] Config=2vm_frontend_colocated VUs=750 START
+[2026-04-21 15:00:15] [2VM] Config=2vm_frontend_colocated VUs=750 SUCCESS
+[2026-04-21 15:00:25] [2VM] Config=2vm_frontend_colocated VUs=1000 START
+[2026-04-21 15:06:25] [2VM] Config=2vm_frontend_colocated VUs=1000 SUCCESS
+[2026-04-21 15:06:35] [2VM] Config=2vm_frontend_colocated VUs=1250 START
+[2026-04-21 15:12:30] [2VM] Config=2vm_frontend_colocated VUs=1250 SUCCESS
+[2026-04-21 15:12:40] [2VM] Config=2vm_frontend_colocated VUs=1500 START
+[2026-04-21 15:18:37] [2VM] Config=2vm_frontend_colocated VUs=1500 SUCCESS
+[2026-04-21 15:18:48] [2VM] Config=2vm_frontend_colocated VUs=1750 START
+[2026-04-21 15:24:43] [2VM] Config=2vm_frontend_colocated VUs=1750 SUCCESS
+[2026-04-21 15:24:54] [2VM] Config=2vm_frontend_colocated VUs=2000 START
+[2026-04-21 15:30:49] [2VM] Config=2vm_frontend_colocated VUs=2000 SUCCESS
+[2026-04-21 15:30:59] [2VM] Config=2vm_frontend_colocated DONE
+[2026-04-21 15:30:59] [2VM] Config=2vm_frontend_distributed START
+[2026-04-21 15:30:59] [2VM] Config=2vm_frontend_distributed VUs=500 START
+[2026-04-21 15:36:59] [2VM] Config=2vm_frontend_distributed VUs=500 SUCCESS
+[2026-04-21 15:37:13] [2VM] Config=2vm_frontend_distributed VUs=750 START
+[2026-04-21 15:43:12] [2VM] Config=2vm_frontend_distributed VUs=750 SUCCESS
+[2026-04-21 15:43:26] [2VM] Config=2vm_frontend_distributed VUs=1000 START
+[2026-04-21 15:49:26] [2VM] Config=2vm_frontend_distributed VUs=1000 SUCCESS
+[2026-04-21 15:49:39] [2VM] Config=2vm_frontend_distributed VUs=1250 START
+[2026-04-21 15:55:40] [2VM] Config=2vm_frontend_distributed VUs=1250 SUCCESS
+[2026-04-21 15:55:53] [2VM] Config=2vm_frontend_distributed VUs=1500 START
+[2026-04-21 16:01:59] [2VM] Config=2vm_frontend_distributed VUs=1500 SUCCESS
+[2026-04-21 16:02:13] [2VM] Config=2vm_frontend_distributed VUs=1750 START
+[2026-04-21 16:08:05] [2VM] Config=2vm_frontend_distributed VUs=1750 SUCCESS
+[2026-04-21 16:08:18] [2VM] Config=2vm_frontend_distributed VUs=2000 START
+[2026-04-21 16:14:11] [2VM] Config=2vm_frontend_distributed VUs=2000 SUCCESS
+[2026-04-21 16:14:25] [2VM] Config=2vm_frontend_distributed DONE
+[2026-04-21 16:14:25] [2VM] Config=2vm_colocated_colocated START
+[2026-04-21 16:14:25] [2VM] Config=2vm_colocated_colocated VUs=500 START
+[2026-04-21 16:20:11] [2VM] Config=2vm_colocated_colocated VUs=500 SUCCESS
+[2026-04-21 16:20:21] [2VM] Config=2vm_colocated_colocated VUs=750 START
+[2026-04-21 16:25:58] [2VM] Config=2vm_colocated_colocated VUs=750 SUCCESS
+[2026-04-21 16:26:09] [2VM] Config=2vm_colocated_colocated VUs=1000 START
+[2026-04-21 16:31:44] [2VM] Config=2vm_colocated_colocated VUs=1000 SUCCESS
+[2026-04-21 16:31:54] [2VM] Config=2vm_colocated_colocated VUs=1250 START
+[2026-04-21 16:37:28] [2VM] Config=2vm_colocated_colocated VUs=1250 SUCCESS
+[2026-04-21 16:37:38] [2VM] Config=2vm_colocated_colocated VUs=1500 START
+[2026-04-21 16:43:14] [2VM] Config=2vm_colocated_colocated VUs=1500 SUCCESS
+[2026-04-21 16:43:25] [2VM] Config=2vm_colocated_colocated VUs=1750 START
+[2026-04-21 16:48:58] [2VM] Config=2vm_colocated_colocated VUs=1750 SUCCESS
+[2026-04-21 16:49:08] [2VM] Config=2vm_colocated_colocated VUs=2000 START
+[2026-04-21 16:54:44] [2VM] Config=2vm_colocated_colocated VUs=2000 SUCCESS
+[2026-04-21 16:54:54] [2VM] Config=2vm_colocated_colocated DONE
+[2026-04-21 16:54:54] [2VM] Config=2vm_distributed_distributed START
+[2026-04-21 16:54:54] [2VM] Config=2vm_distributed_distributed VUs=500 START
+[2026-04-21 17:00:28] [2VM] Config=2vm_distributed_distributed VUs=500 SUCCESS
+[2026-04-21 17:00:41] [2VM] Config=2vm_distributed_distributed VUs=750 START
+[2026-04-21 17:06:15] [2VM] Config=2vm_distributed_distributed VUs=750 SUCCESS
+[2026-04-21 17:06:28] [2VM] Config=2vm_distributed_distributed VUs=1000 START
+[2026-04-21 17:12:02] [2VM] Config=2vm_distributed_distributed VUs=1000 SUCCESS
+[2026-04-21 17:12:15] [2VM] Config=2vm_distributed_distributed VUs=1250 START
+[2026-04-21 17:17:54] [2VM] Config=2vm_distributed_distributed VUs=1250 SUCCESS
+[2026-04-21 17:18:07] [2VM] Config=2vm_distributed_distributed VUs=1500 START
+[2026-04-21 17:23:41] [2VM] Config=2vm_distributed_distributed VUs=1500 SUCCESS
+[2026-04-21 17:23:54] [2VM] Config=2vm_distributed_distributed VUs=1750 START
+[2026-04-21 17:29:29] [2VM] Config=2vm_distributed_distributed VUs=1750 SUCCESS
+[2026-04-21 17:29:42] [2VM] Config=2vm_distributed_distributed VUs=2000 START
+[2026-04-21 17:35:18] [2VM] Config=2vm_distributed_distributed VUs=2000 SUCCESS
+[2026-04-21 17:35:32] [2VM] Config=2vm_distributed_distributed DONE
+[2026-04-21 17:35:32] [2VM] ======== All 2-VM experiments complete ========

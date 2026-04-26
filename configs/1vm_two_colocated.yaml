@@ -6,17 +6,17 @@ listeners:
 groups:
   - name: fe
     components:
-      - github.com/ServiceWeaver/onlineboutique/frontend/weaver.Main
+      - github.com/ServiceWeaver/weaver/Main
   - name: g1
     components:
-      - github.com/ServiceWeaver/onlineboutique/adservice/AdService
-      - github.com/ServiceWeaver/onlineboutique/cartservice/CartService
-      - github.com/ServiceWeaver/onlineboutique/checkoutservice/CheckoutService
-      - github.com/ServiceWeaver/onlineboutique/currencyservice/CurrencyService
-  - name: g2
-    components:
-      - github.com/ServiceWeaver/onlineboutique/emailservice/EmailService
-      - github.com/ServiceWeaver/onlineboutique/paymentservice/PaymentService
       - github.com/ServiceWeaver/onlineboutique/productcatalogservice/ProductCatalogService
       - github.com/ServiceWeaver/onlineboutique/recommendationservice/RecommendationService
+      - github.com/ServiceWeaver/onlineboutique/adservice/AdService
+      - github.com/ServiceWeaver/onlineboutique/currencyservice/CurrencyService
       - github.com/ServiceWeaver/onlineboutique/shippingservice/ShippingService
+  - name: g2
+    components:
+      - github.com/ServiceWeaver/onlineboutique/cartservice/CartService
+      - github.com/ServiceWeaver/onlineboutique/checkoutservice/CheckoutService
+      - github.com/ServiceWeaver/onlineboutique/emailservice/EmailService
+      - github.com/ServiceWeaver/onlineboutique/paymentservice/PaymentService

@@ -1,0 +1,5 @@
+[2026-04-21 14:55:11,454] yash-Inspiron-14-5440/INFO/locust.main: Starting Locust 2.43.4
+[2026-04-21 15:00:12,360] yash-Inspiron-14-5440/INFO/locust.runners: Got quit message from master, shutting down...
+[2026-04-21 15:00:12,502] yash-Inspiron-14-5440/INFO/locust.main: Shutting down (exit code 0)
+[locust] Test starting → target: http://192.168.59.106:31914
+[locust] Test complete.

@@ -1,0 +1,298 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  creationTimestamp: null
+  name: serviceweaver-pods-getter
+  namespace: default
+rules:
+- apiGroups:
+  - ''
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  creationTimestamp: null
+  name: serviceweaver-default-pods-getter
+  namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: serviceweaver-pods-getter
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: default
+---
+apiVersion: v1
+data:
+  config.textpb: "namespace:  \"default\"\ndeployment_id:  \"5ea01012-d794-4d08-8bad-89d879e60428\"\
+    \nlisteners:  {\n  key:  \"boutique\"\n  value:  8080\n}\ngroups:  {\n  key: \
+    \ \"github.com/ServiceWeaver/onlineboutique/adservice/AdService\"\n  value:  \"\
+    be\"\n}\ngroups:  {\n  key:  \"github.com/ServiceWeaver/onlineboutique/cartservice/CartService\"\
+    \n  value:  \"be\"\n}\ngroups:  {\n  key:  \"github.com/ServiceWeaver/onlineboutique/checkoutservice/CheckoutService\"\
+    \n  value:  \"be\"\n}\ngroups:  {\n  key:  \"github.com/ServiceWeaver/onlineboutique/currencyservice/CurrencyService\"\
+    \n  value:  \"be\"\n}\ngroups:  {\n  key:  \"github.com/ServiceWeaver/onlineboutique/emailservice/EmailService\"\
+    \n  value:  \"be\"\n}\ngroups:  {\n  key:  \"github.com/ServiceWeaver/onlineboutique/paymentservice/PaymentService\"\
+    \n  value:  \"be\"\n}\ngroups:  {\n  key:  \"github.com/ServiceWeaver/onlineboutique/productcatalogservice/ProductCatalogService\"\
+    \n  value:  \"be\"\n}\ngroups:  {\n  key:  \"github.com/ServiceWeaver/onlineboutique/recommendationservice/RecommendationService\"\
+    \n  value:  \"be\"\n}\ngroups:  {\n  key:  \"github.com/ServiceWeaver/onlineboutique/shippingservice/ShippingService\"\
+    \n  value:  \"be\"\n}\ngroups:  {\n  key:  \"github.com/ServiceWeaver/weaver/Main\"\
+    \n  value:  \"github.com/ServiceWeaver/weaver/Main\"\n}\ntelemetry:  {\n  metrics:\
+    \  {\n    export_interval:  {\n      seconds:  30\n    }\n  }\n}\n"
+  weaver.toml: '[serviceweaver]
+
+    name   = "ob"
+
+    binary = "../onlineboutique/boutique"
+
+    '
+kind: ConfigMap
+metadata:
+  annotations:
+    description: This ConfigMap contains config files for app "ob" version "5ea01012".
+  creationTimestamp: null
+  labels:
+    serviceweaver/app: ob
+    serviceweaver/version: 5ea01012
+  name: config-5ea01012
+  namespace: default
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    description: This Deployment hosts components github.com/ServiceWeaver/onlineboutique/currencyservice/CurrencyService,
+      github.com/ServiceWeaver/onlineboutique/emailservice/EmailService, github.com/ServiceWeaver/onlineboutique/productcatalogservice/ProductCatalogService,
+      github.com/ServiceWeaver/onlineboutique/recommendationservice/RecommendationService,
+      github.com/ServiceWeaver/onlineboutique/adservice/AdService, github.com/ServiceWeaver/onlineboutique/cartservice/CartService,
+      github.com/ServiceWeaver/onlineboutique/checkoutservice/CheckoutService, github.com/ServiceWeaver/onlineboutique/paymentservice/PaymentService,
+      github.com/ServiceWeaver/onlineboutique/shippingservice/ShippingService.
+  creationTimestamp: null
+  labels:
+    serviceweaver/app: ob
+    serviceweaver/version: 5ea01012
+  name: ob-be-5ea01012-45965e4d
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      serviceweaver/name: ob-be-5ea01012-45965e4d
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        description: This Pod hosts components github.com/ServiceWeaver/onlineboutique/currencyservice/CurrencyService,
+          github.com/ServiceWeaver/onlineboutique/emailservice/EmailService, github.com/ServiceWeaver/onlineboutique/productcatalogservice/ProductCatalogService,
+          github.com/ServiceWeaver/onlineboutique/recommendationservice/RecommendationService,
+          github.com/ServiceWeaver/onlineboutique/adservice/AdService, github.com/ServiceWeaver/onlineboutique/cartservice/CartService,
+          github.com/ServiceWeaver/onlineboutique/checkoutservice/CheckoutService,
+          github.com/ServiceWeaver/onlineboutique/paymentservice/PaymentService, github.com/ServiceWeaver/onlineboutique/shippingservice/ShippingService.
+      creationTimestamp: null
+      labels:
+        serviceweaver/app: ob
+        serviceweaver/name: ob-be-5ea01012-45965e4d
+        serviceweaver/version: 5ea01012
+      namespace: default
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  serviceweaver/name: ob-be-5ea01012-45965e4d
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - args:
+        - babysitter
+        - /weaver/weaver.toml
+        - /weaver/config.textpb
+        - github.com/ServiceWeaver/onlineboutique/currencyservice/CurrencyService
+        - github.com/ServiceWeaver/onlineboutique/emailservice/EmailService
+        - github.com/ServiceWeaver/onlineboutique/productcatalogservice/ProductCatalogService
+        - github.com/ServiceWeaver/onlineboutique/recommendationservice/RecommendationService
+        - github.com/ServiceWeaver/onlineboutique/adservice/AdService
+        - github.com/ServiceWeaver/onlineboutique/cartservice/CartService
+        - github.com/ServiceWeaver/onlineboutique/checkoutservice/CheckoutService
+        - github.com/ServiceWeaver/onlineboutique/paymentservice/PaymentService
+        - github.com/ServiceWeaver/onlineboutique/shippingservice/ShippingService
+        image: ob:5ea01012
+        imagePullPolicy: Never
+        name: serviceweaver
+        resources: {}
+        stdin: true
+        tty: true
+        volumeMounts:
+        - mountPath: /weaver/weaver.toml
+          name: config
+          subPath: weaver.toml
+        - mountPath: /weaver/config.textpb
+          name: config
+          subPath: config.textpb
+      dnsPolicy: ClusterFirst
+      serviceAccountName: default
+      volumes:
+      - configMap:
+          name: config-5ea01012
+        name: config
+      nodeSelector:
+        kubernetes.io/hostname: ssp-study-m02
+status: {}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    description: This HorizontalPodAutoscaler scales the "ob-be-5ea01012-45965e4d"
+      Deployment.
+  creationTimestamp: null
+  labels:
+    serviceweaver/app: ob
+    serviceweaver/version: 5ea01012
+  name: ob-be-5ea01012-45965e4d
+  namespace: default
+spec:
+  maxReplicas: 10
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 80
+        type: Utilization
+    type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ob-be-5ea01012-45965e4d
+status:
+  currentMetrics: null
+  desiredReplicas: 0
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    description: This Service forwards traffic to the "boutique" listener.
+  creationTimestamp: null
+  labels:
+    serviceweaver/app: ob
+    serviceweaver/listener: boutique
+    serviceweaver/version: 5ea01012
+  name: boutique-5ea01012
+  namespace: default
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    serviceweaver/name: ob-weaver-main-5ea01012-c2ece319
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    description: This Deployment hosts components github.com/ServiceWeaver/weaver/Main.
+  creationTimestamp: null
+  labels:
+    serviceweaver/app: ob
+    serviceweaver/version: 5ea01012
+  name: ob-weaver-main-5ea01012-c2ece319
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      serviceweaver/name: ob-weaver-main-5ea01012-c2ece319
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        description: This Pod hosts components github.com/ServiceWeaver/weaver/Main.
+      creationTimestamp: null
+      labels:
+        serviceweaver/app: ob
+        serviceweaver/name: ob-weaver-main-5ea01012-c2ece319
+        serviceweaver/version: 5ea01012
+      namespace: default
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  serviceweaver/name: ob-weaver-main-5ea01012-c2ece319
+              topologyKey: kubernetes.io/hostname
+            weight: 100
+      containers:
+      - args:
+        - babysitter
+        - /weaver/weaver.toml
+        - /weaver/config.textpb
+        - github.com/ServiceWeaver/weaver/Main
+        image: ob:5ea01012
+        imagePullPolicy: Never
+        name: serviceweaver
+        ports:
+        - containerPort: 8080
+          name: boutique
+        resources: {}
+        stdin: true
+        tty: true
+        volumeMounts:
+        - mountPath: /weaver/weaver.toml
+          name: config
+          subPath: weaver.toml
+        - mountPath: /weaver/config.textpb
+          name: config
+          subPath: config.textpb
+      dnsPolicy: ClusterFirst
+      serviceAccountName: default
+      volumes:
+      - configMap:
+          name: config-5ea01012
+        name: config
+      nodeSelector:
+        kubernetes.io/hostname: ssp-study
+status: {}
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    description: This HorizontalPodAutoscaler scales the "ob-weaver-main-5ea01012-c2ece319"
+      Deployment.
+  creationTimestamp: null
+  labels:
+    serviceweaver/app: ob
+    serviceweaver/version: 5ea01012
+  name: ob-weaver-main-5ea01012-c2ece319
+  namespace: default
+spec:
+  maxReplicas: 10
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 80
+        type: Utilization
+    type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ob-weaver-main-5ea01012-c2ece319
+status:
+  currentMetrics: null
+  desiredReplicas: 0

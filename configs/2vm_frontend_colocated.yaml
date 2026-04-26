@@ -6,7 +6,7 @@ listeners:
 groups:
   - name: fe
     components:
-      - github.com/ServiceWeaver/onlineboutique/frontend/weaver.Main
+      - github.com/ServiceWeaver/weaver/Main
   - name: be
     components:
       - github.com/ServiceWeaver/onlineboutique/adservice/AdService

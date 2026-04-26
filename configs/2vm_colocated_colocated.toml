@@ -7,25 +7,27 @@
 name   = "boutique-2vm-colocated-colocated"
 binary = "../onlineboutique/boutique"
 
+colocate = [
+  # Group 1 → VM1: frontend + read-path services
+  [
+    "github.com/ServiceWeaver/weaver/Main",
+    "github.com/ServiceWeaver/onlineboutique/adservice/AdService",
+    "github.com/ServiceWeaver/onlineboutique/currencyservice/CurrencyService",
+    "github.com/ServiceWeaver/onlineboutique/productcatalogservice/ProductCatalogService",
+    "github.com/ServiceWeaver/onlineboutique/recommendationservice/RecommendationService",
+    "github.com/ServiceWeaver/onlineboutique/shippingservice/ShippingService",
+  ],
+  # Group 2 → VM2: transactional / write-path services
+  [
+    "github.com/ServiceWeaver/onlineboutique/cartservice/CartService",
+    "github.com/ServiceWeaver/onlineboutique/checkoutservice/CheckoutService",
+    "github.com/ServiceWeaver/onlineboutique/emailservice/EmailService",
+    "github.com/ServiceWeaver/onlineboutique/paymentservice/PaymentService",
+  ],
+]
+
+
 [ssh]
 listeners.boutique = {address = "0.0.0.0:8080"}
 locations          = "ssh_locations_2vm.txt"
 
-colocate = [
-  # Group 1 → VM1: frontend + read-path services
-  [
-    "github.com/ServiceWeaver/onlineboutique/frontend/T",
-    "github.com/ServiceWeaver/onlineboutique/adservice/T",
-    "github.com/ServiceWeaver/onlineboutique/currencyservice/T",
-    "github.com/ServiceWeaver/onlineboutique/productcatalogservice/T",
-    "github.com/ServiceWeaver/onlineboutique/recommendationservice/T",
-    "github.com/ServiceWeaver/onlineboutique/shippingservice/T",
-  ],
-  # Group 2 → VM2: transactional / write-path services
-  [
-    "github.com/ServiceWeaver/onlineboutique/cartservice/T",
-    "github.com/ServiceWeaver/onlineboutique/checkoutservice/T",
-    "github.com/ServiceWeaver/onlineboutique/emailservice/T",
-    "github.com/ServiceWeaver/onlineboutique/paymentservice/T",
-  ],
-]

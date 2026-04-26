@@ -8,24 +8,26 @@
 name   = "boutique-1vm-frontend-colocated"
 binary = "../onlineboutique/boutique"
 
-[multi]
-listeners.boutique = {address = "localhost:8080"}
-
 colocate = [
   # Group 1 — Frontend + lightweight read-path services
   [
-    "github.com/ServiceWeaver/onlineboutique/frontend/T",
-    "github.com/ServiceWeaver/onlineboutique/adservice/T",
-    "github.com/ServiceWeaver/onlineboutique/currencyservice/T",
-    "github.com/ServiceWeaver/onlineboutique/recommendationservice/T",
+    "github.com/ServiceWeaver/weaver/Main",
+    "github.com/ServiceWeaver/onlineboutique/adservice/AdService",
+    "github.com/ServiceWeaver/onlineboutique/currencyservice/CurrencyService",
+    "github.com/ServiceWeaver/onlineboutique/recommendationservice/RecommendationService",
   ],
   # Group 2 — Transactional / heavier backend services
   [
-    "github.com/ServiceWeaver/onlineboutique/cartservice/T",
-    "github.com/ServiceWeaver/onlineboutique/checkoutservice/T",
-    "github.com/ServiceWeaver/onlineboutique/emailservice/T",
-    "github.com/ServiceWeaver/onlineboutique/paymentservice/T",
-    "github.com/ServiceWeaver/onlineboutique/productcatalogservice/T",
-    "github.com/ServiceWeaver/onlineboutique/shippingservice/T",
+    "github.com/ServiceWeaver/onlineboutique/cartservice/CartService",
+    "github.com/ServiceWeaver/onlineboutique/checkoutservice/CheckoutService",
+    "github.com/ServiceWeaver/onlineboutique/emailservice/EmailService",
+    "github.com/ServiceWeaver/onlineboutique/paymentservice/PaymentService",
+    "github.com/ServiceWeaver/onlineboutique/productcatalogservice/ProductCatalogService",
+    "github.com/ServiceWeaver/onlineboutique/shippingservice/ShippingService",
   ],
 ]
+
+
+[multi]
+listeners.boutique = {address = "localhost:8080"}
+

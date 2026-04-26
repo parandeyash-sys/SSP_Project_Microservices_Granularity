@@ -1,0 +1,64 @@
+[2026-04-21 15:07:26,111] yash-Inspiron-14-5440/INFO/locust.main: Starting Locust 2.43.4
+[2026-04-21 15:07:26,128] yash-Inspiron-14-5440/INFO/locust.runners: yash-Inspiron-14-5440_cf7005270cce41ef9c5a47f48ec88c18 (index 0) reported as ready. 1 workers connected.
+[2026-04-21 15:07:26,129] yash-Inspiron-14-5440/INFO/locust.runners: yash-Inspiron-14-5440_9c9996dbb0d741628d8714cf746be36c (index 1) reported as ready. 2 workers connected.
+[2026-04-21 15:07:26,175] yash-Inspiron-14-5440/INFO/locust.runners: yash-Inspiron-14-5440_89be5531bc7245c491cfbbba45633b31 (index 2) reported as ready. 3 workers connected.
+[2026-04-21 15:07:26,217] yash-Inspiron-14-5440/INFO/locust.runners: yash-Inspiron-14-5440_a67269d5059e48589221c0ce7e0e7855 (index 3) reported as ready. 4 workers connected.
+[2026-04-21 15:07:26,220] yash-Inspiron-14-5440/INFO/locust.runners: yash-Inspiron-14-5440_d537df829afc4aadb9ac854a0d38a7a3 (index 4) reported as ready. 5 workers connected.
+[2026-04-21 15:07:26,224] yash-Inspiron-14-5440/INFO/locust.runners: yash-Inspiron-14-5440_6222603ab95040bfba9aecf7dee65f2f (index 5) reported as ready. 6 workers connected.
+[2026-04-21 15:07:26,228] yash-Inspiron-14-5440/INFO/locust.runners: yash-Inspiron-14-5440_c512ec7ff3f34df98684682933ee51d9 (index 6) reported as ready. 7 workers connected.
+[2026-04-21 15:07:26,229] yash-Inspiron-14-5440/INFO/locust.runners: yash-Inspiron-14-5440_5ac65d7bf6ef4b748b5e2cc6e5119560 (index 7) reported as ready. 8 workers connected.
+[2026-04-21 15:07:26,230] yash-Inspiron-14-5440/INFO/locust.runners: yash-Inspiron-14-5440_dd91b1163d454447bbb8547855fe076e (index 8) reported as ready. 9 workers connected.
+[2026-04-21 15:07:26,262] yash-Inspiron-14-5440/INFO/locust.runners: yash-Inspiron-14-5440_ad60c0b216a84c52b533b57626678844 (index 9) reported as ready. 10 workers connected.
+[2026-04-21 15:07:26,272] yash-Inspiron-14-5440/INFO/locust.runners: yash-Inspiron-14-5440_305cf12e17b547aa8d5887c8ec250c98 (index 10) reported as ready. 11 workers connected.
+[2026-04-21 15:07:26,296] yash-Inspiron-14-5440/INFO/locust.runners: yash-Inspiron-14-5440_3fbb1b6f7d7b435581cba8601fff76f3 (index 11) reported as ready. 12 workers connected.
+[2026-04-21 15:07:27,128] yash-Inspiron-14-5440/INFO/locust.main: Run time limit set to 300 seconds
+[2026-04-21 15:07:27,129] yash-Inspiron-14-5440/INFO/locust.runners: Sending spawn jobs of 1250 users at 41.00 spawn rate to 12 ready workers
+[2026-04-21 15:07:57,575] yash-Inspiron-14-5440/INFO/locust.runners: All users spawned: {"BoutiqueUser": 1250} (1250 total users)
+[2026-04-21 15:12:27,128] yash-Inspiron-14-5440/INFO/locust.main: --run-time limit reached, shutting down
+[2026-04-21 15:12:27,261] yash-Inspiron-14-5440/INFO/locust.runners: Worker 'yash-Inspiron-14-5440_305cf12e17b547aa8d5887c8ec250c98' (index 10) quit. 0 workers ready.
+[2026-04-21 15:12:27,265] yash-Inspiron-14-5440/INFO/locust.runners: Worker 'yash-Inspiron-14-5440_89be5531bc7245c491cfbbba45633b31' (index 2) quit. 0 workers ready.
+[2026-04-21 15:12:27,271] yash-Inspiron-14-5440/INFO/locust.runners: Worker 'yash-Inspiron-14-5440_ad60c0b216a84c52b533b57626678844' (index 9) quit. 0 workers ready.
+[2026-04-21 15:12:27,274] yash-Inspiron-14-5440/INFO/locust.runners: Worker 'yash-Inspiron-14-5440_c512ec7ff3f34df98684682933ee51d9' (index 6) quit. 0 workers ready.
+[2026-04-21 15:12:27,288] yash-Inspiron-14-5440/INFO/locust.runners: Worker 'yash-Inspiron-14-5440_a67269d5059e48589221c0ce7e0e7855' (index 3) quit. 0 workers ready.
+[2026-04-21 15:12:27,352] yash-Inspiron-14-5440/INFO/locust.runners: Worker 'yash-Inspiron-14-5440_dd91b1163d454447bbb8547855fe076e' (index 8) quit. 0 workers ready.
+[2026-04-21 15:12:27,357] yash-Inspiron-14-5440/INFO/locust.runners: Worker 'yash-Inspiron-14-5440_3fbb1b6f7d7b435581cba8601fff76f3' (index 11) quit. 0 workers ready.
+[2026-04-21 15:12:27,394] yash-Inspiron-14-5440/INFO/locust.runners: Worker 'yash-Inspiron-14-5440_6222603ab95040bfba9aecf7dee65f2f' (index 5) quit. 0 workers ready.
+[2026-04-21 15:12:27,402] yash-Inspiron-14-5440/INFO/locust.runners: Worker 'yash-Inspiron-14-5440_5ac65d7bf6ef4b748b5e2cc6e5119560' (index 7) quit. 0 workers ready.
+[2026-04-21 15:12:27,554] yash-Inspiron-14-5440/INFO/locust.runners: Worker 'yash-Inspiron-14-5440_d537df829afc4aadb9ac854a0d38a7a3' (index 4) quit. 0 workers ready.
+[2026-04-21 15:12:27,571] yash-Inspiron-14-5440/INFO/locust.runners: Worker 'yash-Inspiron-14-5440_cf7005270cce41ef9c5a47f48ec88c18' (index 0) quit. 0 workers ready.
+[2026-04-21 15:12:27,580] yash-Inspiron-14-5440/INFO/locust.runners: Worker 'yash-Inspiron-14-5440_9c9996dbb0d741628d8714cf746be36c' (index 1) quit. 0 workers ready.
+[2026-04-21 15:12:27,580] yash-Inspiron-14-5440/INFO/locust.runners: The last worker quit, stopping test.
+[2026-04-21 15:12:28,137] yash-Inspiron-14-5440/INFO/locust.main: Shutting down (exit code 0)
+Type     Name                                                                          # reqs      # fails |    Avg     Min     Max    Med |   req/s  failures/s
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+GET      GET /                                                                          23190     0(0.00%) |    857       5    4818    540 |   77.21        0.00
+GET      GET /?currency=X                                                               18433     0(0.00%) |    848       5    4595    530 |   61.37        0.00
+GET      GET /?product_id=X                                                              2246     0(0.00%) |    854       5    4381    540 |    7.48        0.00
+GET      GET /cart                                                                       9201     0(0.00%) |    367       6    2912    260 |   30.63        0.00
+GET      GET /product/[id]                                                              16137     0(0.00%) |    298       6    2240    220 |   53.73        0.00
+POST     POST /cart (add)                                                               11484     0(0.00%) |    568      13    3587    430 |   38.24        0.00
+POST     POST /cart (pre-checkout add)                                                   4687     0(0.00%) |    558      14    3643    420 |   15.61        0.00
+POST     POST /cart/checkout                                                             4681     0(0.00%) |    111       5     874     87 |   15.59        0.00
+POST     POST /cart/empty                                                                4650     0(0.00%) |    934       9    4819    620 |   15.48        0.00
+POST     POST /setCurrency                                                               6954     0(0.00%) |    945       9    4616    630 |   23.15        0.00
+--------|----------------------------------------------------------------------------|-------|-------------|-------|-------|-------|-------|--------|-----------
+         Aggregated                                                                    101663     0(0.00%) |    651       5    4819    370 |  338.49        0.00
+
+Response time percentiles (approximated)
+Type     Name                                                                                  50%    66%    75%    80%    90%    95%    98%    99%  99.9% 99.99%   100% # reqs
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+GET      GET /                                                                                 540    910   1400   1600   2100   2500   3300   3700   4200   4700   4800  23190
+GET      GET /?currency=X                                                                      530    900   1300   1600   2100   2500   3300   3700   4200   4600   4600  18433
+GET      GET /?product_id=X                                                                    540    870   1300   1700   2200   2500   3200   3700   4300   4400   4400   2246
+GET      GET /cart                                                                             260    390    500    570    810   1000   1300   1700   2500   2900   2900   9201
+GET      GET /product/[id]                                                                     220    320    410    460    620    760   1000   1300   2100   2200   2200  16137
+POST     POST /cart (add)                                                                      430    630    790    900   1200   1400   1800   2200   3300   3600   3600  11484
+POST     POST /cart (pre-checkout add)                                                         420    600    790    880   1100   1400   1800   2300   3400   3600   3600   4687
+POST     POST /cart/checkout                                                                    87    120    140    160    230    290    400    460    590    870    870   4681
+POST     POST /cart/empty                                                                      620    990   1400   1700   2300   2700   3400   3800   4700   4800   4800   4650
+POST     POST /setCurrency                                                                     630    990   1400   1700   2200   2600   3400   3800   4400   4600   4600   6954
+--------|--------------------------------------------------------------------------------|--------|------|------|------|------|------|------|------|------|------|------|------
+         Aggregated                                                                            370    620    840   1000   1800   2200   2800   3400   4200   4600   4800 101663
+
+[locust] Test starting → target: http://192.168.59.106:32710
+[locust] Test complete.
